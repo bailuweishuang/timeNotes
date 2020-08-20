@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>居中</title>
+    <style type="text/css">
+      .flex {
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .parent {
+        width: 100px;
+        height: 100px;
+        background-color: gainsboro;
+        position: relative;
+      }
+      .parent .son {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .parent-m {
+        width: 100px;
+        height: 100px;
+        background: aquamarine;
+      }
+      .parent-m .son {
+        margin: 0 auto;
+        width: max-content;
+        line-height: 100px;
+      }
+      .parent-b {
+        width: 100px;
+        height: 100px;
+        background-color: cyan;
+        display: -webkit-box;
+        /* 要么横着，要么竖着 */
+        -webkit-box-orient: horizontal;
+        -webkit-box-pack: center;
+      }
+      .parent-b .son {
+        line-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- flex布局 单行文本-->
+    <div class="flex">
+      123
+    </div>
+
+    <!-- positoin: absolute -->
+    <div class="parent">
+      <div class="son">123</div>
+    </div>
+
+    <!-- margin,line-height  -->
+    <div class="parent-m">
+      <div class="son">123</div>
+    </div>
+    <!-- box -->
+    <div class="parent-b">
+      <div class="son">
+        123
+      </div>
+    </div>
+  </body>
+</html>

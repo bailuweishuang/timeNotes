@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>flex</title>
+    <style type="text/css">
+      #direction-content,
+      #flex-content,
+      #justify-content,
+      #align-content,
+      #align-content-content,
+      #order-content,
+      #flex-grow-content,
+      #flex-shrink-content,
+      #flex-basis-content,
+      #align-self-content {
+        display: flex;
+        flex-direction: row;
+      }
+      button {
+        padding: 6px 10px;
+        border-radius: 6px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+      #flex-content {
+        width: 300px;
+      }
+      #align-content,
+      #align-self-content {
+        height: 300px;
+        border: 1px solid #333;
+      }
+      #align-content-content {
+        width: 300px;
+        height: 300px;
+        border: 1px solid #333;
+        flex-wrap: wrap;
+      }
+      #align-content .direction,
+      #align-content-content .direction {
+        height: auto;
+      }
+      #flex-grow-content .direction {
+        width: auto;
+        flex-grow: 1;
+      }
+      #flex-shrink-content .direction {
+        width: 300px;
+      }
+      .direction {
+        width: 100px;
+        height: 100px;
+        background-color: aqua;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+      const contentArray = [
+        {
+          title: 'flex-direction：决定主轴的方向（即项目的排列方向）',
+          btnArray: {
+            id: 'flex-direction',
+            children: ['row', 'row-reverse', 'column', 'column-reverse'],
+          },
+          content: {
+            id: 'direction-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'flexDirection',
+        },
+        {
+          title: 'flex-wrap：决定如何换行',
+          btnArray: {
+            id: 'flex-wrap',
+            children: ['nowrap', 'wrap', 'wrap-reverse'],
+          },
+          content: {
+            id: 'flex-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'flexWrap',
+        },
+        {
+          title: 'justify-content：项目在主轴上的对齐方式',
+          btnArray: {
+            id: 'justify',
+            children: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around'],
+          },
+          content: {
+            id: 'justify-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'justifyContent',
+        },
+        {
+          title: 'align-items：项目在交叉轴上如何对齐',
+          btnArray: {
+            id: 'align-items',
+            children: ['flex-start', 'flex-end', 'center', 'baseline', 'stretch'],
+          },
+          content: {
+            id: 'align-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'alignItems',
+        },
+        {
+          title:
+            'align-content：多根轴线（多行）的对齐方式。如果项目只有一根轴线，该属性不起作用。',
+          btnArray: {
+            id: 'align-two-content',
+            children: [
+              'flex-start',
+              'flex-end',
+              'center',
+              'space-between',
+              'space-around',
+              'stretch',
+            ],
+          },
+          content: {
+            id: 'align-content-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'alignContent',
+        },
+        {
+          title: 'order：项目的排列顺序。数值越小，排列越靠前，默认为0',
+          btnArray: {
+            id: 'order',
+            children: ['-1', '0', '1'],
+          },
+          content: {
+            id: 'order-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'order',
+          attributeName: 'project',
+        },
+        {
+          title: 'flex-grow：定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。',
+          btnArray: {
+            id: 'flex-grow',
+            children: ['0', '1', '2'],
+          },
+          content: {
+            id: 'flex-grow-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'flexGrow',
+          attributeName: 'project',
+        },
+        {
+          title: 'flex-shrink：定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。',
+          btnArray: {
+            id: 'flex-shrink',
+            children: ['0', '1', '2'],
+          },
+          content: {
+            id: 'flex-shrink-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'flexShrink',
+          attributeName: 'project',
+        },
+        {
+          title:
+            'flex-basis：定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小',
+          btnArray: {
+            id: 'flex-basis',
+            children: ['0', '300px', 'auto'],
+          },
+          content: {
+            id: 'flex-basis-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'flexBasis',
+          attributeName: 'project',
+        },
+        {
+          title:
+            'align-self：定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小',
+          btnArray: {
+            id: 'align-self',
+            children: ['flex-start', 'flex-end', 'center', 'baseline', 'stretch'],
+          },
+          content: {
+            id: 'align-self-content',
+            children: [1, 2, 3, 4, 5],
+          },
+          type: 'alignSelf',
+          attributeName: 'project',
+        },
+      ];
+      const render = (arr, content, type) => {
+        [...arr].forEach((item) => {
+          item.onclick = () => {
+            if (content.getAttribute('class') === 'project') {
+              content.children[3].style[type] = item.innerHTML;
+            } else {
+              content.style[type] = item.innerHTML;
+            }
+          };
+        });
+      };
+      contentArray.forEach((item) => {
+        const { title, btnArray, content, type, attributeName } = item;
+        const newnode = document.createElement('div');
+        const pnode = document.createElement('p');
+        pnode.innerHTML = title;
+        newnode.appendChild(pnode);
+        const onenode = document.createElement('div');
+        onenode.setAttribute('id', btnArray.id);
+        btnArray.children.forEach((item) => {
+          const btnnode = document.createElement('button');
+          btnnode.innerHTML = item;
+          onenode.appendChild(btnnode);
+        });
+        newnode.appendChild(onenode);
+        const secondnode = document.createElement('div');
+        secondnode.setAttribute('id', content.id);
+        secondnode.setAttribute('class', attributeName);
+        content.children.forEach((i, index) => {
+          const divnode = document.createElement('div');
+          divnode.innerHTML = i;
+          divnode.setAttribute('class', 'direction');
+          secondnode.appendChild(divnode);
+        });
+        newnode.appendChild(secondnode);
+        document.body.appendChild(newnode);
+        const wrap = document.getElementById(btnArray.id).getElementsByTagName('button');
+        const wrapContent = document.getElementById(content.id);
+        render(wrap, wrapContent, type);
+      });
+    </script>
+  </body>
+</html>
