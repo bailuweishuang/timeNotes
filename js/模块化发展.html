@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>模块化发展</title>
+  </head>
+  <body>
+    <div>
+      模块化： 一下可重复的 易维护的 代码
+    </div>
+    <script type="text/javascript">
+      // 第一版 全局变量和各模块的命名空间
+      var myReveaLingModule = (function() {
+        var privateVar = 'jack';
+        var publicVar = 'ben';
+        function privateFunction() {
+          console.log('name' + privateVar);
+        }
+        function publicSetName(name) {
+          privateVar = name;
+        }
+        return {
+          setName: publicSetName,
+          getName: privateFunction,
+        };
+      })();
+      myReveaLingModule.setName('123');
+
+      //第二版 common.js and AMD
+      // common.js
+      const bar = require('./bar');
+      //模块产出
+      module.exports = function() {
+        // ...
+      };
+
+      //AMD
+      define(function(require, factory) {
+        'use strict';
+        //通过相对路径获取依赖模块
+        const bar = require('./bar');
+        // 模块导出
+        return function() {
+          // ...
+        };
+      });
+
+      //第三版 es6 module
+      // 相对路径获取模块
+      import bar from './bar';
+      // 模块产出
+      export default bar;
+    </script>
+  </body>
+</html>
