@@ -1,0 +1,14 @@
+.from-content .top {
+  display: flex;
+  align-items: center;
+}
+.from-content .label-c {
+  margin-bottom: 10px;
+}
+.from-content .top {
+  display: flex;
+  align-items: center;
+}
+.from-content .top h1 {
+  margin-right: 10px;
+}

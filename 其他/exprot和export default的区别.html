@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      export：
+      <script type="text/javascript">
+        // 只有一个
+        export let a = 'a';
+        // 多个
+        let c = 'c';
+        let b = 'b';
+        export { b, c };
+        // 引入
+        import { a } from './a';
+      </script>
+      export default:
+      <script type="text/javascript">
+        export default a;
+        import a from './a';
+      </script>
+    </div>
+  </body>
+</html>

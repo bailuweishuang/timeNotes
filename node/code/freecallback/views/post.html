@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/post.css" />
+  </head>
+  <body>
+    <div class="from-content">
+        <div class="top">
+          <h1><a href="/">首页</a></h1>
+          <h3>发表评论</h3>
+        </div>
+        <form action="/postmessage" method="get">
+          <div class="label-c">
+            <label class="title" for="input_name">name:</label>
+            <input type="text" placeholder="name" name="name" required id="input_name" />
+          </div>
+          <div class="label-c">
+            <label class="title" for="input_mark">mark:</label>
+            <input type="text" placeholder="mark" name="message" required id="input_mark" />
+          </div>
+          <button type="submit">发表</button>
+        </form>
+      </div>
+  </body>
+</html>

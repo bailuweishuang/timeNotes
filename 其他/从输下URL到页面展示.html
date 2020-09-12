@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>从输入URL到页面展示</title>
+</head>
+<body>
+    <!-- https://github.com/fengyuanchen/compressorjs 图片压缩 -->
+  <div>
+   1 输入地址：从书签、历史记录等地方给你智能补全路径让你选择，更有甚者如chrome，直接从缓存拉出页面展示
+
+   2 浏览器查找域名的IP地址：一般先会在本地host文件查找有没有相对于的规则，有就直接用host里面的IP地址，
+
+                           如果没有，浏览器就会发一个DNS请求到本地DNS服务器（一般是网络接入服务器商提供的， 如中国电信），
+
+                           请求到达本地的DNS服务器后，首先查询它的缓存记录， 有救直接返回结果了， 没有本地DNS服务器会向根DNS服务器进行请求（递归的过程）。
+
+                           倘若根DNS服务器还是没有，就会告诉本地DNS服务器，这个时候你就可以到域服务器上去进行查询了，并给出域服务器的地址（迭代的过程），
+
+                           本地DNS服务器想域服务器发送请求后，会得到一个你的域名的解析服务器的地址，最后，本地DNS服务器想域解析服务器发送请求，得到域名和IP的
+
+                           对应的关系，本地DNS服务器会把IP返回电脑并缓存下来以便下一次使用。
+
+                           DNS：域名系统，类似电话簿的功能，我们习惯记住网站名称（www.baidu.com），计算机记住IP地址，NDS就对应起来 我们输入网址 DNS就去找到IP地址
+
+                           
+
+   3 TCP建立连接（三次握手）
+  </div>
+</body>
+</html>
