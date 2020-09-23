@@ -1,3 +1,4 @@
+const ex = require('./export');
 const foot = 'hollow world';
 
-console.log(foot)
+console.log(ex);

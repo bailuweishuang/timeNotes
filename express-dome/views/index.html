@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/index.css"></link>
+  </head>
+  <body>
+    <div class="content">
+      <h2>欢迎来到德莱联盟，在这里，你将。。。</h2>
+      <button class="btn"><a href="/post">发表留言</a></button>
+      <div class="root">
+        {{each list}}
+        
+        <p class="root-p"><span>{{$value.name}}:{{$value.message}}</span><span>{{$value.time}}</span>
+        <button><a href="/delete?id={{ $value.id }}">删除</a></button>
+        <button><a href="/update?id={{ $value.id }}">修改</a></button>
+      </p>
+        {{/each}}
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>require加载规则</title>
+  </head>
+  <body>
+    <div>
+      优先从缓存中加载
+      模块标识符：require('模块标识符')
+       1: 核心模块  本质也是文件 被编译到了二进制文件中 我们只要按照名字来加载就可以了 require('fs')
+       2：自己的模块 （路径模块） require('../index.js') 
+       3: 第三方模块 例如： require('art-template') 在当前模块目录下找 node_modules下的art-template的package.json下的
+                    main 指向谁 就是引用的谁，package.json 文件不存在 或者main 指定的入口模块也没有
+                    则node会自动找到改目录下的index.js 没有 就上一层
+    </div>
+  </body>
+</html>

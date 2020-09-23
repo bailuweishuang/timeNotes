@@ -27,6 +27,7 @@ let list = [
 ];
 http
   .createServer((req, res) => {
+    // 解析请求路径中的查询字符串
     const urlObject = url.parse(req.url, true);
     const { pathname } = urlObject;
     let index = '/views/index.html'; 
@@ -58,7 +59,7 @@ http
       let newQuery = { ...query };
       newQuery.time = '2020-09-12';
       list.unshift(newQuery);
-      // 设置状态码
+      // 设置状态码 301:永久重定向 浏览器会记住；302:临时重定向 浏览器不记忆
       res.statusCode = '302';
       // 设置路径 重定向
       res.setHeader('location', '/');

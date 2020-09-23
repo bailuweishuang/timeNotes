@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>模块系统</title>
+  </head>
+  <body>
+    <div>
+      导出： exports
+      <script type="text/javascript">
+        const add = () => {};
+        // 挂载的方式导出（导出多个成员） 这个时候导出的是个对象 {} 引用 const func = require('./a') func.add
+        exports.add = add;
+      </script>
+      <script type="text/javascript">
+        const add = () => {};
+        // 直接导出成员（导出单个成员） 这个时候导出的就是add这个方法 引用 const func = require('./a') func
+        module.exports = add;
+      </script>
+
+      在文件引用中 ./ 是可以省略的
+      <script type="text/javascript">
+        const fs = require('fs');
+        fs.readFile('./code/hellow.js', (err, data) => {
+          if (err) {
+            return console.log('err');
+          }
+          console.log(data.toString());
+        });
+        // 等同于
+        fs.readFile('code/hellow.js', (err, data) => {
+          if (err) {
+            return console.log('err');
+          }
+          console.log(data.toString());
+        });
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="from-content">
+      <div class="top">
+        <h3>编辑</h3>
+      </div>
+      <form action="/update" method="post">
+        <input type="hidden" name="id" value="{{ students.id }}" />
+        <div class="label-c">
+          <label class="title" for="input_name">name:</label>
+          <input
+            type="text"
+            placeholder="name"
+            name="name"
+            required
+            id="input_name"
+            value="{{ students.name }}"
+          />
+        </div>
+        <div class="label-c">
+          <label class="title" for="input_mark">mark:</label>
+          <input
+            type="text"
+            placeholder="mark"
+            name="message"
+            required
+            id="input_mark"
+            value="{{ students.message }}"
+          />
+        </div>
+        <div class="label-c">
+          <label class="title" for="input_time">time:</label>
+          <input
+            type="text"
+            placeholder="time"
+            name="time"
+            required
+            id="input_time"
+            value="{{ students.time }}"
+          />
+        </div>
+        <button type="submit">发表</button>
+      </form>
+    </div>
+  </body>
+</html>
