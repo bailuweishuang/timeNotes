@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      每个类都有显示原型： prototype; 每个实例都有隐示原型：__proto__;
+      获取属性或者方法的时候，先在本身找，如果没有，就去__proto__找
+      实例的__proto__指向类的prototype;
+
+      <script>
+        // 判断是不是个数组
+        const ar = [];
+        // 1
+        ar instanceof Array;
+        // 2
+        Array.isArray([]);
+        //  3
+        Object.prototype.toString.call([]) === '[object Array]';
+      </script>
+      <!-- 简易版jQuery -->
+      <script type="text/javascript">
+        class jQuery {
+          constructor(selector) {
+            const result = document.querySelectorAll(selector);
+            for (let i = 0; i < result.length; i++) {
+              this[i] = result[i];
+            }
+            this.length = result.length;
+            this.selector = selector;
+          }
+
+          get(index) {
+            return this[index];
+          }
+
+          each(fn) {
+            for (let i = 0; i < this.length; i++) {
+              fn(this[i]);
+            }
+          }
+
+          on(type, fn) {
+            return this.each((item => item.addEventListener(type,fn,false)))
+          }
+        }
+      </script>
+    </div>
+  </body>
+</html>

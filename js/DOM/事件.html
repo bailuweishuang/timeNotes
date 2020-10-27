@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    通用的事件监听函数
+
+    <script>
+      function binEvent(elm, type, selector, fn){
+        if(fn == null) {
+          fn = selector;
+          selector = null
+        }
+        elm.addEventListener(type, event => {
+          const target = event.target;
+          if(selector) {
+            // 如果元素被指定的选择器字符串选择，Element.matches()  方法返回true; 否则返回false。
+            if(target.matches(selector)){
+              fn.call(target, event)
+            }
+          }else {
+            fn.call(target, event)
+          }
+        })
+      }
+    </script>
+    
+    事件冒泡的过程
+
+    无限下拉的图片列表，如何监听每个图片的点击: 事件代理
+  </div>
+</body>
+</html>

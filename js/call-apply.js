@@ -97,3 +97,15 @@ Function.prototype.apply_ = function(obj, arr) {
   delete obj[fn];
   return result;
 };
+
+Function.prototype.bind_ = function() {
+  const args = [...arguments];
+
+  const t = args.shift();
+
+  const self = this;
+
+  return function() {
+    return self.apply_(t, args);
+  };
+};
