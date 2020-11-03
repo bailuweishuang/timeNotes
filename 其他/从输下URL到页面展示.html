@@ -33,12 +33,12 @@
       四：渲染页面
       详情请看： https://juejin.im/post/6844904162166063118
 
-      window.onload 和 window.DOMContentLoaded 区别
+      window.onload 和 document.DOMContentLoaded 区别
 
       window.addEventListener('load',function(){
         // 页面资源全部加载完毕
       })
-      window.addEventListener('DOMContentLoaded',function(){
+      document.addEventListener('DOMContentLoaded',function(){
         // Dom 渲染完就执行，图片 视频没有加载完
       })
     </div>
