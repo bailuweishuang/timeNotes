@@ -9,3 +9,35 @@
 
 // 使用更快的网络：CDN
 
+// 防抖
+
+function debounce(fn, delay = 500) {
+  let timer = null;
+  const _debounce = function() {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, arguments);
+      timer = null;
+    }, delay);
+  };
+  return _debounce;
+}
+
+// 节流
+
+function throttle(fn, delay = 100) {
+  let timer = null;
+
+  const _throttle = function() {
+    if (timer) return;
+
+    timer = setTimeOut(function() {
+      fn.apply(this, arguments);
+      timer = null;
+    }, delay);
+  };
+
+  return _throttle;
+}
