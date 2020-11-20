@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    state: 不可变值
+            可能异步，可能同步（setimeout, addEventListener) batchUpdate tran
+            可能合并（对象会合并， 函数不会合并）
+
+    事件：合成事件机制？：更好的兼容性和跨平台 减少内存消耗 避免频繁解绑 方便事件的统一管理
+
+    表单
+
+    通信
+
+    生命周期：挂载时 更新时 卸载时
+
+    函数组件和class组件区别：函数组件： 纯函数 输入props 输出Jsx, 没有实例，没有生命周期
+
+    ref
+    非受控组件： 手动操作DOM的时候，例如文件上传，富文本编辑器
+
+    Portals: 
+      使用场景：overflow:hidden; 父组件z-index值太小，flex 需要放在body第一层
+      用法： ReactDOM.createPortal(<div>{this.props.children}</div>,节点)
+
+      context： 公共信息如何传递给每个组件？
+      
+     const context =  React.createContext()
+
+     context.Provider
+     contextType 
+     content.Consumer
+
+     异步组件： import() React.lazy React.Suspense
+
+     性能优化：shouldComponentUpdate(SCU) scu默认返回true，即REACT默认重新渲染所有子组件 必须配合 不可变值 一起用
+     PureComponent和React.memo 
+      不可变值 immutable.js
+
+      高阶组件
+      render props： 通过一个函数讲class组件的state作为props传递给纯函数组件
+
+      vdome and diff：
+
+      只比较同一层级， 不跨级比较
+
+      tag不相同， 直接删除重建，不做深度比较
+
+      tag和key， 两者都相同，认为是相同节点，不做深度比较
+
+      vdome: 用js模拟DOM结构，计算出最小的变更，操作DOM(
+        数据驱动视图)
+
+      <div id="div1" class="container">
+        <p>vdom</p>
+        <ul style="font-size: 20px">
+          <li>a</li>
+        </ul>
+      </div> 
+       ===> js模拟
+     <script type="text/javascript">
+      const a = {
+         tag: 'div',
+         props: {
+           id: 'div1',
+           className: 'container'
+         },
+         children: [{
+           tag: 'p',
+           children: 'vdom'
+         }, {
+           tag: 'ul',
+           props: {style: 'font-size: 20px'},
+           children: [{
+             tag: 'li',
+             children: 'a'
+           }]
+         }]
+       }
+       function a (v) {
+         const c = v + '';
+         if(c.length === 1) return c;
+         c = c.slice(c.length-1) + a(c.slice(0, c.length-1))
+        return c
+       }
+       </script>
+
+       snabbdom
+
+       diff算法：
+          
+      只比较同一层级， 不跨级比较
+
+      tag不相同， 直接删除重建，不做深度比较
+
+      tag和key， 两者都相同，认为是相同节点，不做深度比较
+
+      jsx: React.createElement => vnode => patch => patchNode
+
+      react patch 拆分 =》 reconciliation（纯js计算） 和 commit(Document渲染)
+
+      react fiber：将 reconciliation阶段进行任务拆分 dom渲染时暂停，空闲时间恢复 window.requestIdleCallback这个API来知道dom是否渲染暂停
+  </div>
+</body>
+</html>
