@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      作用域：全局作用域，函数作用域，块级作用域；
+
+      自由变量：没有定义就没使用了，会像上一级寻找，直到全局作用域，没有就报错。
+               自由变量的查找，是在函数定义的地方向上一级一级查找，而不是在执行的地方
+       闭包：
+          作用域应用的特殊情况，有两种表现： 
+          函数作为参数被传递；
+            <script>
+              function ac(fn) {
+                const a = 100;
+                fn();
+              }
+              const a = 200;
+              function fn() {
+                console.log(a);
+              }
+              ac(fn); // 结果输出 200
+            </script>
+          函数作为返回值被返回
+            <script>
+              function ac() {
+                const a = 100;
+                return function () {
+                  console.log(a)
+                }
+              }
+              const a = 200;
+              const vv = ac();
+              vv(); // 输出 100
+            </script>
+
+            this: 取什么值是在函数执行的时候确认的，不是在函数定义的时候定义的
+           
+    </div>
+  </body>
+</html>

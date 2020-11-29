@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>   
+
+
+  1: typeof能判断哪些类型：
+      能判断所有的值类型；（这里null除外，typeof null // object）
+      能识别函数；
+      判断是否是引用类型。
+   
+  2：何时使用===，何时使用==：除了判断==null之外都用===；
+
+  3：值类型和引用类型的区别：储存方式不同，
+      变量类型：
+      值类型：符串（String）、数字(Number)、布尔(Boolean)、对空（Null）、未定义（Undefined）、Symbol。
+              储存的就是value
+              eg: let a = 100;
+                      栈（由上向下）
+                  key  value
+                  a     100
+      引用类型：对象(Object)、数组(Array)、函数(Function)。
+              储存的是内存地址
+
+              let a = {a:1}
+
+                栈（由上向下）
+              key      value
+              a        内存地址
+                ...
+                ...
+              内存地址  {a:1}
+              key      value
+              堆（由下向上）；
+              
+  4：手写深拷贝：
+    <script type="text/javascript">
+      function deepClone (obj = {}) {
+        if(typeof obj !== 'object' || obj == null) return obj;
+        let result;
+        result = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {}
+        for(let key in obj) {
+          if(obj.hasOwnProperty(key)) {
+            result[key] = deepClone(obj[key])
+          }
+        }
+        return result;
+      }
+    </script>
+
+
+    变量计算 - 类型转换：
+        字符串拼接
+
+        ==
+        <script type="text/javascript">
+        const obj = {a:1}
+        if(obj.a == null) {}
+        // 相当于 if(obj.a === null || obj.a === undefined) {}
+        </script>
+        if语句和逻辑运算
+</body>
+</html>
