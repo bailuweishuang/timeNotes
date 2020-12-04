@@ -28,7 +28,7 @@
       })();
       myReveaLingModule.setName('123');
 
-      //第二版 common.js and AMD
+      //第二版 common.js（动态引用） and AMD
       // common.js
       const bar = require('./bar');
       //模块产出
@@ -47,7 +47,7 @@
         };
       });
 
-      //第三版 es6 module
+      //第三版 es6 module 静态引用
       // 相对路径获取模块
       import bar from './bar';
       // 模块产出

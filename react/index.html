@@ -31,7 +31,7 @@
 
       context： 公共信息如何传递给每个组件？
       
-     const context =  React.createContext()
+     const context =  React.createContext() 
 
      context.Provider
      contextType 
@@ -106,6 +106,31 @@
       react patch 拆分 =》 reconciliation（纯js计算） 和 commit(Document渲染)
 
       react fiber：将 reconciliation阶段进行任务拆分 dom渲染时暂停，空闲时间恢复 window.requestIdleCallback这个API来知道dom是否渲染暂停
+
+
+
+      面试题：
+          组件之间如何通讯： props redux context 自定义事件；
+          jsx的本质是什么：
+          context是什么，如何应用：
+          scu的用途：性能优化 配合不可变值使用
+          redux单项数据流：view => action => dispatch => reducer => state => view
+          setState场景题
+          什么是纯函数：函数返回一个新值，没有副作用
+          生命周期：单组件 父子组件；
+          react发起ajax应该在那个生命周期：componentDidMount;
+          渲染列表，为何使用key: 不能是index random =》 减少渲染次数 提高渲染性能；
+          函数组件和class组件的区别：纯函数，输入props，输出jsx，没有实例，没有生命周期，没有state，不能扩展其他方法
+          什么是受控组件：表单的值受state的控制
+          何时使用异步组件：加载大组件
+          多组件有公共逻辑，如何抽离：高阶组件，Render Props;
+          redux如何进行异步请求: 使用异步action，如redux-thunk;
+          react-router如何配置懒加载；
+          PureComponent有何区别：实现了浅比较的shouldComponentUpdate;
+          react事件和DOM事件的区别：所有的事件挂载到document上 event不是原生的，是合成事件对象
+          react性能优化：渲染列表使用key，自定义事件、dom事件及时销毁，合理使用异步组件，减少函数bind this的次数 合理使用scu
+          react和vue的区别：都支持组件化，都是数据驱动视图，都使用vdom操作DOM  React使用jsx拥抱js Vue使用模板拥抱html React是函数式编程
+                            vue是声明式编程
   </div>
 </body>
 </html>

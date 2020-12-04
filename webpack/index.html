@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    module chunk bundle的区别
+      module： 模块 各个源码文件
+      chunk： 多模块合并成的 如 entry import() splitChunk
+      bundle： 最终输出的文件
+    happyPack 多进程打包
+
+      js是单线程的，开启多进程打包，
+      提高构建速度（特别是多核CPU）
+
+    ParallelUglifyPlugin：使用 ParallelUglifyPlugin 并行压缩输出的 JS 代码；
+
+    多进程打包的原因：项目较大，打包慢，开启多进程提高速度；项目较小就不用了；
+
+    自动刷新： watch设置为true， 但是一般在DevServer就默认开启了（整个网页刷新，速度慢，状态更新）
+
+    热更新：
+
+    dllplugin 动态链接库插件
+
+    输出 线上环境代码
+    性能优化： 体积更小 合理分包 不重复加载 速度更快 内存使用更少
+
+    小图base64
+    bundle 加 hash
+    懒加载
+    提取公共代码
+    IngorePlugin
+    noParse
+    使用CDN
+    使用production
+    Scope Hosting：代码体积更小 创建函数作用域更少 代码可读性更好
+
+    babel: 
+    babel-polyfill
+    core-js
+    babel-runtime
+
+    前端为什么要进行打包和构建？ 代码体积更小（tree-shaking）， 加载更快， 编译高级语言或者语法 兼容性 错误提示
+                              统一、高效的开发环境，统一构建流程和产出标准 集成公司构建规范
+    babel和webpack的区别：前者是js新语法编译工具，不关心模块化，后者是打包构建工具，多个loader plugin的集合
+    为什么proxy不能被polyfill？ 因为无法被模拟
+  </div>
+</body>
+</html>
