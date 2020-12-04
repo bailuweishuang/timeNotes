@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        .trans {
+            width: 100px;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .trans:hover .a {
+            transform: translateY(-50px);
+        }
+
+        .trans:hover .b {
+            transform: translateY(-50px);
+        }
+
+        .a {
+            background-color: indigo;
+        }
+
+        .b {
+            background-color: lawngreen;
+        }
+
+        .a,
+        .b {
+            width: 100%;
+            height: 50px;
+            transition: all 0.5s;
+            text-align: center;
+            line-height: 50px;
+        }
+    </style>
+    <style type="text/css">
+        .content1 {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 50px;
+            background-color: #4caf50;
+            border: 1px solid #ccc;
+            padding: 10px;
+            color: #fff;
+            width: 100px;
+        }
+
+        .trans1 {
+            position: relative;
+            flex: 1;
+            height: 100%;
+            line-height: 50px;
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: all 0.5s;
+        }
+
+        .trans1:hover {
+            transform: rotateX(90deg);
+        }
+
+        .a1 {
+            background-color: #4caf50;
+            z-index: 11;
+            transform: translateZ(25px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            perspective: 300px;
+        }
+
+        .b1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            perspective: 300px;
+            background-color: #009688;
+            transform: translateY(25px) rotateX(-90deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="trans">
+            <div class="a">123</div>
+            <div class="b">456</div>
+        </div>
+    </div>
+    <div class="content1">
+        <div class="trans1">
+            <div class="a1">123</div>
+            <div class="b1">456</div>
+        </div>
+    </div>
+</body>
+
+</html>
