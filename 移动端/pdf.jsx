@@ -1,5 +1,13 @@
 import React, { Component } from "react";
 import { Page, pdfjs } from "react-pdf";
+// 这样引入Document 可能会引起安卓一些手机展示不出来
+// error：The browser/environment lacks native support for critical functionality used by the PDF.js library
+// (e.g. `ReadableStream` and/or `Promise.allSettled`); please use an ES5-compatible build instead
+//解决方法：一：import { Document } from "react-pdf"; 如果没有解决问题：
+// 引入下面内容
+// import { pdfjsworker } from "pdfjs-dist/es5/build/pdf.worker.entry";
+// pdfjs.GlobalWorkerOptions.workerSrc = pdfjsworker;
+
 import { Document } from "react-pdf/dist/esm/entry.webpack";
 import { Pagination, Icon } from "antd-mobile";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -21,7 +29,7 @@ class FilePreview extends Component {
     const pdf = document.getElementById("searchPdf");
     const imageId = document.getElementById("searchId");
     if (pdf) {
-        // 移动端添加触摸事件
+      // 移动端添加触摸事件
       pdf.addEventListener("touchstart", (e) => {
         if (e.touches.length > 1) {
           let start = this.getDistance(
@@ -157,7 +165,7 @@ class FilePreview extends Component {
       y: (first.y + second.y) / 2,
     };
   };
-  
+
   // pdf接口成功的回调
   onDocumentLoadSuccess = ({ numPages }) => {
     this.setState({
@@ -247,7 +255,7 @@ class FilePreview extends Component {
                 </div>
               }
             >
-                {/* width最好写上，不然手机上pdf会不显示出来 */}
+              {/* width最好写上，不然手机上pdf会不显示出来 */}
               <Page pageNumber={pageNumber} scale={scale} width={300} />
             </Document>
             <Pagination
