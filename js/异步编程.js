@@ -27,3 +27,18 @@ function f1() {
 
 
 // 发布订阅  promise
+
+
+
+
+
+let p = new Promise((resolve) => {
+  console.log(1);
+  resolve()
+})
+
+setTimeout(() => console.log(2),0);
+
+p.then(() => console.log(3))
+
+console.log(4)

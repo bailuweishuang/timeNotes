@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <script type="text/javascript">
+
+        // 判断是否是数组
+        isArray = (arr) => {
+            return Object.prototype.toString.call(arr) === '[object Array]' ? true : false
+        }
+        // chunk 切割数组
+        chunk = (arr, size) => {
+            if (!isArray(arr)) return [];
+            let s = Math.ceil(arr.length / size);
+            let res = [];
+            for (let i = 1; i <= s; i++) {
+                res.push(arr.slice(i * size - size, i * size))
+            }
+            return res
+        }
+
+        // 过滤掉假值
+        compact = (arr) => {
+            if (!isArray(arr)) return [];
+            let res = [];
+            let length = arr.length;
+            for (let i = 0; i < length; i++) {
+                if (arr[i]) {
+                    res.push(arr[i])
+                }
+            }
+            return res
+        }
+
+        // 链接数组 注意：箭头函数没有this，arguments依存于Function中
+        concat = function () {
+            let res = [];
+            const p = [...arguments];
+            p.map((item) => {
+                if (isArray(item)) {
+                    res.push(...item)
+                } else {
+                    res.push(item)
+                }
+            })
+            return res
+        }
+
+        // 过滤后面数组的值
+        difference = (arr, value) => {
+            if (!isArray(arr)) return [];
+            const N = [...value];
+            let res = []
+            arr.map((item) => {
+                if (!N.includes(item)) {
+                    res.push(item)
+                }
+            })
+            return res
+        }
+
+        // 切割数组
+        drop = (arr, size = 1) => {
+            if (!isArray(arr)) return [];
+            return [...arr].splice(size, arr.length)
+        }
+    </script>
+</body>
+
+</html>

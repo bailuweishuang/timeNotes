@@ -1,22 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
 </head>
+
 <body>
   BOM:
 
-    navigator: Navigator 对象包含有关浏览器的信息
+  navigator: Navigator 对象包含有关浏览器的信息
 
-    screen: window.screen 对象包含有关用户屏幕的信息
+  screen: window.screen 对象包含有关用户屏幕的信息
 
-    location: 对象包含有关当前 URL 的信息
+  location: 对象包含有关当前 URL 的信息
 
-    history: History 对象包含用户（在浏览器窗口中）访问过的 URL
+  history: History 对象包含用户（在浏览器窗口中）访问过的 URL
 
-    如何识别浏览器类型： navigator.userAgent.indexOf()；
+  如何识别浏览器类型： navigator.userAgent.indexOf()；
+  <script type="text/javascript">
+    // 检查插件
+    hasPlugin = (name) => {
+      let pName = name.toLowerCase();
+      for (let key of window.navigator.plugins) {
+        if (key.name.toLowerCase().indexOf(pName) > -1) {
+          return true
+        }
+      };
+      return false;
+    }
+    /* IE检测插件 */
+    hasIEPlugin = (name) => {
+      try {
+        new ActiveXObject(name);
+        return true
+      } catch (e) {
+        return false
+      }
+    }
+  </script>
 </body>
+
 </html>
