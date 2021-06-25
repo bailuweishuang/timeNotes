@@ -25,6 +25,8 @@ function Inher(p, s) {
     s.prototype = pPro;
 }
 
+Inher(Parent, Son);
+
 Son.prototype.sayA = function () {
     console.log(this.age)
 }

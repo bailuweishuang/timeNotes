@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #ul {
+            position: absolute;
+            display: none;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="muneContent">
+        <ul id="ul">
+            <li>开始</li>
+            <li>结束</li>
+            <li>上移</li>
+            <li>下移</li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        let mune = document.getElementById("muneContent");
+        let ul = document.getElementById("ul");
+        console.log(ul.children)
+        document.addEventListener("contextmenu", (e) => {
+            ul.style.left = `${e.clientX}px`;
+            ul.style.top = `${e.clientY}px`;
+            ul.style.display = 'block';
+            e.preventDefault();
+        })
+        document.addEventListener('click', () => {
+            ul.style.display = 'none';
+        })
+        ul.addEventListener('click', (e) => {
+            console.log(e.target.nodeName)
+            if(e.target.nodeName.toLowerCase() === 'li') {
+                console.log(e.target.innerText)
+            }
+            e.preventDefault();
+            e.stopPropagation();
+        })
+
+    // compression  node压缩文件的包
+        /* MutationObserver
+        监听dom操作 */
+    </script>
+</body>
+
+</html>

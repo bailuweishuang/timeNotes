@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <canvas id="myCanvas" width="400px" height="400px"></canvas>
+    </div>
+    <script type="text/javascript">
+        const canvasContent = document.getElementById('myCanvas');
+        if (canvasContent.getContext) {
+            let context = canvasContent.getContext("2d");
+            // 填充用的色彩
+            context.fillStyle = '#0000ff';
+            /* 绘制矩形，唯一一个可以在2D绘制的形状
+            4个参数：坐标X，坐标Y，宽度，高度 */
+            context.fillRect(0, 0, 100, 100);
+            // 描边用的色彩
+            context.strokeStyle = 'red';
+            context.strokeRect(120, 0, 50, 50);
+            context.fillStyle = "rgba(0,0,255,0.5)";
+            context.fillRect(50, 50, 100, 100);
+            // 清除某个区域 4个参数：坐标X，坐标Y，宽度，高度 
+            context.clearRect(70, 70, 15, 15);
+
+            //绘制路径
+            /*     // 创建路径，要最开始调用beginPath方法；
+                context.beginPath();
+                context.strokeStyle = 'blue';
+                // arc(圆心x，圆心y, 半径，起始角度，结束角度，顺时还是逆时方向)
+                context.arc(200, 40, 30, 0, Math.PI * 2, false);
+                context.fillStyle = 'blue';
+                context.fill();
+                context.stroke();
+                context.closePath()
+                context.beginPath();
+
+                context.strokeStyle = 'blue';
+                context.arc(200, 40, 25, 0, Math.PI * 2, false);
+                context.fillStyle = '#fff';
+                context.fill();
+                context.closePath()
+                context.beginPath();
+                context.strokeStyle = 'red';
+                context.moveTo(200, 40);
+                context.lineTo(220, 40);
+                context.moveTo(200, 40);
+                context.lineTo(200, 20);
+                context.stroke();
+                context.closePath(); */
+            function painting(type, arr, color, length, direction) {
+                context.beginPath();
+                context.strokeStyle = color;
+                if (type === 'round') {
+                    context.arc(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5]);
+                    context.fillStyle = color;
+                    context.fill();
+                } else {
+                    context.moveTo(arr[0], arr[1])
+                    if (direction === 'cross') {
+                        context.lineTo(arr[0] + length, arr[1])
+                    } else {
+                        context.lineTo(arr[0], arr[1] + length)
+                    }
+                }
+                context.stroke();
+                context.closePath()
+            }
+            painting('round', [220, 60, 50, 0, Math.PI * 2, false], 'blue');
+            painting('round', [220, 60, 40, 0, Math.PI * 2, false], '#fff')
+            painting('line', [220, 60], 'red', 20, 'cross');
+            painting('line', [220, 60], 'red', -20,);
+            context.fillStyle = '#333';
+            context.font = "bold 12px Arial";
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText('1', 235, 35);
+            context.fillText('2', 245, 45);
+            context.fillText('3', 250, 61);
+            context.fillText('4', 245, 77);
+            context.fillText('5', 235, 87);
+            context.fillText('6', 220, 91);
+            context.fillText('7', 205, 87);
+            context.fillText('8', 195, 77);
+            context.fillText('9', 190, 61);
+            context.fillText('10', 195, 45);
+            context.fillText('11', 205, 35);
+            context.fillText('12', 220, 30);
+        } else {
+            alert("您的浏览器不支持canvas，请更换浏览器...")
+        }
+    </script>
+</body>
+
+</html>
