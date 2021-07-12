@@ -9,6 +9,9 @@
 
 <body>
     <div>
+        <input type="text" autofocus id="text" value='1212'>
+        <input type="image">
+        <input type="checkBox" checked>
         <canvas id="myCanvas" width="400px" height="400px"></canvas>
     </div>
     <script type="text/javascript">
@@ -94,6 +97,13 @@
         } else {
             alert("您的浏览器不支持canvas，请更换浏览器...")
         }
+        const text = document.getElementById("text");
+        text.setSelectionRange(0, 2)
+        window.addEventListener("select", (e) => {
+            const target = e.target;
+            const sValue = target.value.substring(target.selectionStart, target.selectionEnd);
+            console.log(sValue)
+        })
     </script>
 </body>
 

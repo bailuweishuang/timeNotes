@@ -1,3 +1,5 @@
+const { func } = require("prop-types");
+
 // 创建对象
 let xmlhttp;
 if (window.XMLHttpRequest) {
@@ -41,23 +43,23 @@ xhr.timeout = 10;
 
 
 
-function newAJAX (url, type = 'get', async = true) {
+function newAJAX(url, type = 'get', async = true) {
   const p = new Promise((resolve, reject) => {
     let xml;
 
-    if(window.XMLHttpRequest) {
+    if (window.XMLHttpRequest) {
       xml = new XMLHttpRequest()
-    }else {
+    } else {
       xml = new ActiveXObject('Microsoft.XMLHTTP')
     }
 
     xml.open(type, url, async);
 
     xml.onreadystatechange = function () {
-      if(xml.readyState === 4) {
-        if(xml.status === 200) {
+      if (xml.readyState === 4) {
+        if (xml.status === 200) {
           resolve(xml.responseText)
-        }else if(XMLHttpRequestUpload.status === 404) {
+        } else if (XMLHttpRequestUpload.status === 404) {
           reject(new Error('404'))
         }
       }
@@ -67,4 +69,12 @@ function newAJAX (url, type = 'get', async = true) {
   })
 
   return p
+}
+
+// get url拼接
+
+function addUrl(url, name, value) {
+  const symbol = url.indexOf("?") > 0 ? "&" : "?";
+  const res = `${url}${symbol}${name}=${value}`;
+  return res
 }

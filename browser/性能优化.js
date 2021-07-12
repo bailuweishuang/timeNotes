@@ -13,7 +13,7 @@
 
 function debounce(fn, delay = 500) {
   let timer = null;
-  const _debounce = function() {
+  const _debounce = function () {
     if (timer) {
       clearTimeout(timer);
     }
@@ -30,10 +30,10 @@ function debounce(fn, delay = 500) {
 function throttle(fn, delay = 100) {
   let timer = null;
 
-  const _throttle = function() {
+  const _throttle = function () {
     if (timer) return;
 
-    timer = setTimeOut(function() {
+    timer = setTimeOut(function () {
       fn.apply(this, arguments);
       timer = null;
     }, delay);
@@ -41,3 +41,14 @@ function throttle(fn, delay = 100) {
 
   return _throttle;
 }
+
+
+
+/* 减少http的请求和大小 资源的合并和压缩 图片懒加载 音视频走流文件*/
+/**
+ * 如何避免dom回流：
+ *  放弃操作dom
+ *  分离读写操作
+ *  样式集中改变
+ *  css3硬件加速 规避回流
+*/

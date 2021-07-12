@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <iframe name="richedit" style="height: 100px; width: 100px"></iframe>
+    <div contenteditable="true">
+        <p>123</p>
+        <p>456</p>
+        <p>789</p>
+    </div>
+    <script type="text/javascript">
+        window.addEventListener('load', () => {
+            frames['richedit'].document.designMode = "on";
+            frames["richedit"].document.execCommand("bold", false, null);
+            frames["richedit"].document.execCommand("italic", false, null);
+        })
+    </script>
+</body>
+
+</html>

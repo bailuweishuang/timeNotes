@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id='container'></div>
+    <script type="text/babel">
+        // 创建节点
+        /* type: 类型 */
+        function createElement(type, props, ...children) {
+            return {
+                type,
+                props: {
+                    ...props,
+                    // children可能非对象 
+                    children: children.map(child => typeof child === 'object' ? child : creatTextElement(child))
+                }
+            }
+        }
+
+        // 创建文本
+        function creatTextElement(text) {
+            return {
+                type: 'TEXT_ELEMENT',
+                props: {
+                    nodeValue: text,
+                    children: []
+                }
+            }
+        }
+
+
+        // 下一个工作单元
+        let nextUnitOfWork = null;
+
+        let wipRoot = null;
+        /**
+         *  workLoop 工作循环函数
+         * @param {deadline} 截至时间（requestIdleCallback返回）
+         */
+        function workLoop(deadline) {
+            // 是否需要停止工作循环
+            let shouldYield = false;
+            // 当有下一个工作单元及没有优先级更高的，执行循环
+            while (nextUnitOfWrrk && !shouldYield) {
+                nextUnitOfWork = performUnitOfWork(
+                    nextUnitOfWork
+                )
+                // 截至日期快到了，通知循环
+                shouldYield = deadline.timeRemaining() < 1
+            }
+
+            // 没有下一个工作单元了 就渲染到真实的dom
+            if (!nextUnitOfWork && wipRoot) {
+                commitRoot()
+            }
+            requestIdleCallback(workLoop)
+        }
+        // requestIdleCallback 当浏览器主线程空闲的时候就会运行回调 会返回一个截至日期参数，我们可以使用它来检查在浏览器需要再次控制之前还有多少时间。
+        requestIdleCallback(workLoop)
+
+        // 渲染到真实dom
+        function commitRoot() {
+            commitWork(wipRoot.child);
+            wipRoot = null
+        }
+        function commitWork(fiber) {
+            if (!fiber) return
+            const dom = fiber.parent.dom;
+            dom.appendChild(fiber.dom);
+            commitWork(fiber.child)
+            commitWork(fiber.sibling)
+        }
+        // 执行工作且返回下一个工作单元
+        function performUnitOfWork(nextUnitOfWork) {
+            // 没有节点 创建一个节点
+            if (!nextUnitOfWork.dom) {
+                nextUnitOfWork.dom = createDom(nextUnitOfWork)
+            }
+            // 有父节点 把节点添加到父节点下 因为渲染会打断 所以展示的页面可能就不全 更换方式 节点渲染完了再添加到真是dom
+            // if (nextUnitOfWork.parent) {
+            //     nextUnitOfWork.parent.dom.appendChild(nextUnitOfWork.dom)
+            // }
+
+            // 子节点
+            const elements = nextUnitOfWork.props.children;
+            let index = 0;
+            // 中间变量
+            let prevSibling = null
+            while (index < element.length) {
+                const element = elements[index];
+                // 新的片段
+                const newFiber = {
+                    type: element.type,
+                    props: element.props,
+                    parent: nextUnitOfWork,
+                    dom: null
+                }
+
+                if (index === 0) {
+                    // 第一个节点设置为子节点
+                    nextUnitOfWork.child = newFiber
+                } else {
+                    // 设置节点的兄弟节点
+                    prevSibling.sibling = newFiber
+                }
+                prevSibling = newFiber
+            }
+
+            // 有子节点就返回子节点
+            if (nextUnitOfWork.child) {
+                return nextUnitOfWork.child
+            }
+
+            let nextFiber = nextUnitOfWork;
+            while (nextFiber) {
+                // 有兄弟节点就返回兄弟节点
+                if (nextFiber.sibling) {
+                    return nextFiber.sibling
+                }
+                // 直到找到root就停止
+                nextFiber = nextFiber.parent
+            }
+        }
+
+        // 创建DOM节点
+        function createDom(fiber) {
+            // 创建节点 不同类型创建节点不一样
+            const dom = fiber.type === 'TEXT_ELEMENT' ?
+                document.createTextNode('') : document.createElement(fiber.type);
+            // 属性分配给节点
+            Object.keys(fiber.props).filter(item => item !== 'children').forEach((key) => {
+                dom[key] = fiber.props[key]
+            });
+
+            return dom
+            // 循环每个子节点创建节点 节点渲染就不会停止 数据太多 性能问题 更换方式
+            /* element.props.children.forEach((item) => {
+                render(item, dom)
+            }) */
+
+        }
+
+        // render函数
+        function render(element, container) {
+            // 设置根光纤
+            wipRoot = {
+                dom: container,
+                props: {
+                    children: [element]
+                }
+            }
+            nextUnitOfWork = wipRoot
+        }
+
+        // react
+        const ownReact = {
+            createElement,
+            render
+        }
+        /** 
+         * @jsx ownReact.createElement 
+         * */
+        const element = <div id='foo'>
+            <p>大王叫我来巡山</p>
+            <p>天王盖地虎</p>
+        </div>
+        console.log(element)
+        const app = document.getElementById("container")
+        ownReact.render(element, app)
+
+    </script>
+</body>
+
+</html>

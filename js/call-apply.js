@@ -90,7 +90,7 @@ Function.prototype.apply_ = function(obj, arr) {
   obj[fn] = this;
   let result;
   if (arr) {
-    result = obj[fn](...arguments);
+    result = obj[fn](...arr);
   } else {
     obj[fn]();
   }

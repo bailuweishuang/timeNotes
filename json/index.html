@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        const json = {
+            name: 'xiaozhang',
+            age: 18,
+            sex: '22',
+            year: 2021,
+            title: 'baiye'
+        }
+        const jsonText = JSON.stringify(json);
+        // 返回想要的值，Json.stringify的第二个参数如果是一个数组，就会返回对象里包含数组的 例如 想要返回 name age year
+        const needJson = JSON.stringify(json, ["name", "age", "year"])
+
+        // Json.stringify的第二个参数也可以接受一个函数，key value 可以对其进行编辑 第三个参数 可以设置缩进0-10， 也可以接受其他字符串并以字符串作为缩进
+        const sj = JSON.stringify(json, null, ".")
+    </script>
+</body>
+
+</html>
