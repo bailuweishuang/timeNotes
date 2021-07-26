@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        div {
+            width: 300px;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+
+        .across-gradient {
+            background: linear-gradient(90deg, red, blue);
+        }
+
+        .across-strip {
+            background: linear-gradient(red 33.3%, blue 0, blue 66.6%, green 0);
+            background-size: 100% 30px;
+        }
+
+        .sideways-strip {
+            background: repeating-linear-gradient(45deg, green 10px, blue 0, blue 20px, yellow 0, yellow 30px);
+        }
+
+        .the-grid {
+            background: #abd0be;
+            background-image: linear-gradient(white 2px, transparent 0),
+                linear-gradient(90deg, white 2px, transparent 0),
+                linear-gradient(hsla(0, 0%, 100%, .5) 1px, transparent 0),
+                linear-gradient(90deg, hsla(0, 0%, 100%, .5) 1px, transparent 0);
+            background-size: 75px 75px, 75px 75px, 15px 15px, 15px 15px;
+        }
+
+        .wave-point {
+            background: saddlebrown;
+            background-image: radial-gradient(tan 30%, transparent 0), radial-gradient(tan 30%, transparent 0);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .the-board {
+            background: silver;
+            background-image: linear-gradient(45deg, yellow 25%, transparent 0),
+             linear-gradient(45deg, transparent 75%, yellow 0), 
+             linear-gradient(45deg, yellow 25%, transparent 0),
+              linear-gradient(45deg, transparent 75%, yellow 0);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px, 15px 15px, 30px 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="across-gradient">横着渐变</div>
+        <div class="across-strip">横着条状</div>
+        <div class="sideways-strip">斜着条状</div>
+        <div class="the-grid">网格</div>
+        <div class="wave-point">波点</div>
+        <div class="the-board">棋盘</div>
+    </div>
+</body>
+
+</html>
