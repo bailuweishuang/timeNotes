@@ -1,0 +1,559 @@
+.gantt-Fullscreen {
+    margin: 0 10px;
+  }
+  
+  .u-loading.u-loading-default > div > img {
+    width: 100%;
+  }
+  .ganttref {
+    width: 100%;
+    .gantt_task_line {
+      border: 2px solid #588ce9;
+      background-color: #d9d9d9;
+      .gantt_task_progress {
+        background-color: #588ce9;
+      }
+      .gantt_side_content {
+        position: initial;
+        .suo-content {
+          position: absolute;
+          left: -55px;
+          display: flex;
+          top: 2px;
+          .time_suo {
+            position: relative;
+            margin-left: 1px;
+            .suo {
+              width: 17px;
+              height: 17px;
+              display: inline-block;
+              border-radius: 50%;
+            }
+            .p-suo {
+              background: url("./img/lock.png");
+              background-repeat: no-repeat;
+            }
+            .t-suo {
+              background: url("./img/time.png");
+              background-repeat: no-repeat;
+            }
+            .left_side_suo_tip {
+              position: absolute;
+              top: 0;
+              left: 16px;
+              background: #fff;
+              border: 1px solid;
+              padding: 2px 4px;
+              border-radius: 4px;
+              z-index: 1;
+              display: none;
+            }
+            &:hover .left_side_suo_tip {
+              display: block;
+            }
+            &:hover .gantt_link_control div {
+              display: none;
+            }
+          }
+        }
+        .one-suo {
+          left: -38px;
+        }
+      }
+    }
+  
+    .gantt_milestone {
+      .gantt_side_content {
+        position: inherit;
+      }
+    }
+    .gantt_row {
+      &:hover .gantt_cell {
+        .gantt_tree_content {
+          .module-parent {
+            .button {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+    .gantt_tree_content {
+      .decomposition {
+        text-decoration: underline;
+        color: #0037ff;
+        cursor: pointer;
+      }
+      .module-parent {
+        .button {
+          position: absolute;
+          top: 0px;
+          // right: 18px;
+          background-color: #fff;
+          border-radius: 4px;
+          display: none;
+          z-index: 1;
+          line-height: 28px;
+          padding-left: 4px;
+          p {
+            padding: 3px 5px;
+            display: inline-block;
+            line-height: 12px;
+            font-size: 12px;
+            background: #333333bf;
+            color: #fff;
+            border: 1px solid #333333bf;
+            border-radius: 3px;
+            margin-right: 4px;
+            &:hover {
+              cursor: pointer;
+              background-color: #333;
+            }
+          }
+        }
+        // &:hover .button {
+        //   display: block;
+        // }
+      }
+    }
+    .autoScheduleChangeData {
+      border: 2px solid #ff00008f;
+      background-color: #ff00008f;
+    }
+    .gantt_task_line.gantt_dependent_task {
+      border: 2px solid #18b681;
+      background-color: #d9d9d9;
+      .gantt_task_progress {
+        background-color: #18b681;
+      }
+    }
+    .hide_project_progress_drag .gantt_task_progress_drag {
+      visibility: hidden;
+    }
+    .gantt_critical_task {
+      background-color: #e63030 !important;
+      border-color: #9d3a3a !important;
+      .gantt_task_progress {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+      }
+    }
+    .gantt_milestone {
+      background-color: #d33daf !important;
+      border: 0 solid #61164f !important;
+    }
+    .gantt_grid_head_add {
+      display: none;
+    }
+    .green-sex {
+      background-color: #ace5cd;
+    }
+    .orange-sex {
+      background-color: #ffecc6;
+    }
+    .gantt_grid_data .gantt_row.gantt_selected,
+    .gantt_grid_data .gantt_row.odd.gantt_selected,
+    .gantt_task_row.gantt_selected {
+      background-color: #fff3a1 !important;
+    }
+    .gantt_file,
+    .gantt_folder_closed,
+    .gantt_folder_open {
+      background-image: none;
+      width: 0;
+    }
+    .gantt_close {
+      background-image: url("./img/open.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 16px;
+    }
+    .gantt_open {
+      background-image: url("./img/close.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 16px;
+    }
+    .gantt_add {
+      background-image: url("./img/add.png");
+      width: 16px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    .overdue-indicator {
+      background-color: #ffa600;
+    }
+  }
+  .ganttref-projiect {
+    height: calc(~"100vh - 160px");
+  }
+  .ganttref-modal {
+    height: 350px;
+  }
+  .btn-grounp {
+    display: flex;
+    margin: 8px 0;
+    justify-content: space-between;
+    .search-content {
+      margin-right: 100px;
+    }
+    .ant-btn {
+      margin-left: 5px;
+    }
+    .u-select-selection-rendered {
+      &::after {
+        width: 2px;
+        height: 5px;
+        background-color: red;
+      }
+    }
+  }
+  /* 任务与项目样式 */
+  .gantt_task_line.gantt_dependent_task {
+    background-color: #65c16f;
+    border: 1px solid #3c9445;
+  }
+  
+  .gantt_task_line.gantt_dependent_task .gantt_task_progress {
+    background-color: #46ad51;
+  }
+  
+  /* 关键路径样式 */
+  .gantt_task_cell.week_end {
+    background-color: #eff5fd;
+  }
+  
+  .gantt_selected .gantt_task_cell.week_end {
+    background-color: #f0e493;
+  }
+  
+  /* 开始时间标识样式 */
+  .status_line {
+    background-color: #0ca30a;
+  }
+  
+  /* 分组样式 */
+  .summary-row,
+  .summary-row.odd {
+    background-color: #eeeeee;
+    font-weight: bold;
+  }
+  /* 甘特图字体样式 原为12px */
+  // .gantt_grid div,
+  // .gantt_data_area div {
+  //   font-size: 8px;
+  // }
+  
+  .summary-bar {
+    opacity: 0.4;
+  }
+  
+  /* 自动排程关联任务组样式 */
+  .task_groups {
+    background-color: orangered !important;
+  }
+  
+  .task_groups .gantt_task_progress {
+    background-color: red;
+    opacity: 0.6;
+  }
+  
+  .gantt_task_row.gantt_selected .weekend {
+    background-color: #c0e8ff !important;
+  }
+  
+  /* 全屏样式 */
+  .gantt-fullscreen {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    padding: 2px;
+    font-size: 32px;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.5;
+    text-align: center;
+    -webkit-transition: background-color 0.5s, opacity 0.5s;
+    transition: background-color 0.5s, opacity 0.5s;
+  }
+  
+  .gantt-fullscreen:hover {
+    background: rgba(150, 150, 150, 0.5);
+    opacity: 1;
+  }
+  
+  /* 周末样式 */
+  .weekend {
+    background: #f4f7f4 !important;
+  }
+  
+  .gantt_selected .weekend {
+    background: #f7eb91;
+  }
+  
+  /* 任务完成度行样式 */
+  .red .gantt_cell,
+  .odd.red .gantt_cell,
+  .red .gantt_task_cell,
+  .odd.red .gantt_task_cell {
+    background-color: #fde0e0;
+  }
+  
+  .green .gantt_cell,
+  .odd.green .gantt_cell,
+  .green .gantt_task_cell,
+  .odd.green .gantt_task_cell {
+    background-color: #bee4be;
+  }
+  
+  /* 关系样式 */
+  .gantt_task_link.start_to_start .gantt_line_wrapper div {
+    background-color: #dd5640;
+  }
+  
+  .gantt_task_link.start_to_start:hover .gantt_line_wrapper div {
+    box-shadow: 0 0 5px 0px #dd5640;
+  }
+  
+  .gantt_task_link.start_to_start .gantt_link_arrow_right {
+    border-left-color: #dd5640;
+  }
+  
+  .gantt_task_link.finish_to_start .gantt_line_wrapper div {
+    background-color: #7576ba;
+  }
+  
+  .gantt_task_link.finish_to_start:hover .gantt_line_wrapper div {
+    box-shadow: 0 0 5px 0px #7576ba;
+  }
+  
+  .gantt_task_link.finish_to_start .gantt_link_arrow_right {
+    border-left-color: #7576ba;
+  }
+  
+  .gantt_task_link.finish_to_finish .gantt_line_wrapper div {
+    background-color: #55d822;
+  }
+  
+  .gantt_task_link.finish_to_finish:hover .gantt_line_wrapper div {
+    box-shadow: 0 0 5px 0px #55d822;
+  }
+  
+  .gantt_task_link.finish_to_finish .gantt_link_arrow_left {
+    border-right-color: #55d822;
+  }
+  
+  /* */
+  .deadline {
+    position: absolute;
+    border-radius: 12px;
+    border: 2px solid #585858;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  
+    width: 16px;
+    height: 16px;
+    margin-left: -11px;
+    margin-top: 1px;
+    z-index: 1;
+    background: url("img/deadline_icon.png") center no-repeat;
+  }
+  
+  .overdue-indicator {
+    width: 16px;
+    margin-top: 1px;
+    height: 16px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 17px;
+    color: white;
+    background: rgb(255, 60, 60);
+    line-height: 18px;
+    text-align: center;
+    font-size: 24px;
+  }
+  
+  /* 关系信息样式 */
+  .gantt_side_content.gantt_link_crossing {
+    top: 0px;
+  }
+  
+  /* 计划基线设置 */
+  /*.baseline {*/
+  /*  position: absolute;*/
+  /*  border-radius: 2px;*/
+  /*  opacity: 0.6;*/
+  /*  margin-top: -7px;*/
+  /*  height: 12px;*/
+  /*  background: #ffd180;*/
+  /*  border: 1px solid rgb(255, 153, 0);*/
+  /*  top:52px !important;*/
+  /*}*/
+  
+  /*!* move task lines upper *!*/
+  /*.gantt_task_line, .gantt_line_wrapper {*/
+  /*  margin-top: -9px;*/
+  /*}*/
+  
+  /*.gantt_side_content {*/
+  /*  margin-bottom: 7px;*/
+  /*}*/
+  
+  /*.gantt_task_link .gantt_link_arrow {*/
+  /*  margin-top: -12px*/
+  /*}*/
+  
+  /*.gantt_side_content.gantt_right {*/
+  /*  bottom: 0;*/
+  /*}*/
+  
+  /* 进度滑块 */
+  .gantt_slider {
+    width: 530px;
+    height: 20px;
+    margin-left: 10px;
+    display: inline-block;
+  }
+  
+  .gantt_slider input {
+    width: 34px;
+    height: 18px;
+    border: none;
+  }
+  
+  .gantt_slider div:first-child,
+  .gantt_slider .gantt_slider_value {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 13px;
+  }
+  
+  .gantt_slider .gantt_slider_value {
+    font-size: 15px;
+    color: black;
+    margin: 5px 10px;
+  }
+  
+  /* 日历控件样式 */
+  .dhx_calendar_cont input {
+    width: 96px;
+    padding: 0;
+    margin: 3px 10px 10px 10px;
+    font-size: 11px;
+    height: 17px;
+    text-align: center;
+    border: 1px solid #ccc;
+    color: #646464;
+  }
+  
+  .dhtmlxcalendar_dhx_skyblue,
+  .dhtmlxcalendar_dhx_web,
+  .dhtmlxcalendar_dhx_terrace {
+    z-index: 999999 !important;
+  }
+  
+  /* 行内编辑添加样式 */
+  .gantt_grid_editor_placeholder {
+    margin-top: -6px;
+    height: 18px !important;
+  }
+  
+  /* 拖拽高亮动态样式 */
+  .drag_date {
+    color: #454545;
+    font-size: 13px;
+    text-align: center;
+    z-index: 1;
+  }
+  
+  .drag_date.drag_move_start {
+    margin-left: -15px;
+  }
+  
+  .drag_date.drag_move_end {
+    margin-left: 15px;
+  }
+  
+  .drag_move_vertical,
+  .drag_move_horizontal {
+    background-color: #9de19e;
+    opacity: 0.7;
+    box-sizing: border-box;
+  }
+  
+  .drag_move_vertical {
+    border-right: 1px #6ac666 solid;
+    border-left: 1px #6ac666 solid;
+  }
+  
+  .drag_move_horizontal {
+    border-top: 1px #6ac666 solid;
+    border-bottom: 1px #6ac666 solid;
+  }
+  
+  /* 计算任务所在项目进度 */
+  .gantt_task_line.gantt_dependent_task {
+    background-color: #65c16f;
+    border: 1px solid #3c9445;
+  }
+  
+  .gantt_task_line.gantt_dependent_task .gantt_task_progress {
+    background-color: #46ad51;
+  }
+  
+  .hide_project_progress_drag .gantt_task_progress_drag {
+    visibility: hidden;
+  }
+  
+  .gantt_task_progress {
+    text-align: left;
+    padding-left: 5px;
+    box-sizing: border-box;
+    color: white;
+    font-weight: bold;
+  }
+  
+  /* 甘特图工具栏样式 */
+  .gantt_control {
+    width: 99%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    height: 22px;
+  }
+  .gantt_control button {
+    display: inline-block;
+    font-size: 8px;
+    margin-right: 2px;
+    position: relative;
+    margin-top: 0px;
+    float: right;
+  }
+  /* mpp导入样式 */
+  .gantt_control #mspImport {
+    position: relative;
+    display: inline-block;
+    background: #ffffff;
+    border: 1px solid #ededed;
+    border-radius: 0px;
+    overflow: hidden;
+    color: #a6a6a6;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 18px;
+    width: 100%;
+  }
+  .gantt_control #mspImport #mspFile {
+    position: absolute;
+    font-size: 8px;
+    /*right: 0;*/
+    top: 0;
+    /*opacity: 0;*/
+  }
+  .gantt_control #mspImport:hover {
+    background: #fdfdfd;
+    border-color: #efefef;
+    color: #a8a8a8;
+    text-decoration: none;
+  }
+  

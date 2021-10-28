@@ -34,8 +34,11 @@
      const context =  React.createContext() 
 
      context.Provider
-     contextType 
-     content.Consumer
+     // 这三种使用的区别
+     contextType // 只能在class组件使用 且只能传输单一的context
+     content.Consumer // 可以传输多个
+     React.UseContext() // 只能在函数组件使用 可以传输多个
+     // 消耗性能比较大  要慎用
 
      异步组件： import() React.lazy React.Suspense
 

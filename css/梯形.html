@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .trapezoidal {
+            position: relative;
+            width: 100px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .trapezoidal::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            z-index: -1;
+            background-color: sienna;
+            transform: perspective(30px) rotateX(5deg) scaleY(1.2);
+            transform-origin: bottom left;
+        }
+
+        .the-fan {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: sienna;
+            background-image: linear-gradient(to right, transparent 50%, rgb(224, 224, 65) 0);
+        }
+
+        .the-fan::before {
+            content: "";
+            display: block;
+            height: 100%;
+            width: 50%;
+            margin-left: 50%;
+            background-color: inherit;
+            border-radius: 0 100% 100% 0/ 50%;
+            transform-origin: left;
+            transform: rotate(2deg);
+            /* 大于50%就用下面的background */
+            /* background: rgb(224, 224, 65); */
+            /* animation:
+                spin 3s linear infinite,
+                bg 6s step-end infinite; */
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(.5turn);
+            }
+        }
+
+        @keyframes bg {
+            50% {
+                background:
+                    rgb(224, 224, 65);
+            }
+        }
+
+        main {
+            width: 100%;
+            padding: 80px 0px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .progress-outer {
+            width: 60%;
+            height: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-enter {
+            height: inherit;
+            background: rgba(180, 160, 120, .2);
+        }
+
+        .progress-bg {
+            width: 60%;
+            height: inherit;
+            border-radius: 6px;
+            background: repeating-linear-gradient(-45deg, #D9CFBB 25%, #C3B393 0, #C3B393 50%,
+                    #D9CFBB 0, #D9CFBB 75%, #C3B393 0);
+            background-size: 16px 16px;
+            animation: panoramic 10s linear infinite;
+            /* animation: panoramicW 10s linear infinite; */
+        }
+
+        @keyframes panoramic {
+            to {
+                width: 100%;
+                background-position: 200% 0;
+            }
+        }
+
+        /* @keyframes panoramicW {
+            to {
+                width: 100%;
+            }
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="trapezoidal">梯形</div>
+    <div class="the-fan">扇形</div>
+    <main>
+        <div class="progress-outer">
+            <!--better extension-->
+            <div class="progress-enter">
+                <div class="progress-bg"></div>
+            </div>
+            <!-- <span>60%</span> -->
+        </div>
+    </main>
+</body>
+
+</html>

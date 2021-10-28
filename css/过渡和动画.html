@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>过渡和动画</title>
+    <style type="text/css">
+        .animation {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-image: linear-gradient(#82cc82 60%, #1d1d97);
+            animation: bounce 3s ease-in infinite;
+        }
+
+        @keyframes bounce {
+
+            60% {
+                transform: translateY(350px) translateX(40PX);
+                animation-timing-function:
+                    ease-out;
+            }
+
+            70% {
+                transform: translateY(250px) translateX(80px);
+                animation-timing-function:
+                    ease-out;
+            }
+
+            80% {
+                transform: translateY(350px) translateX(120PX);
+                animation-timing-function:
+                    ease-out;
+            }
+
+
+
+            90% {
+                transform: translateY(250px) translateX(160px);
+                animation-timing-function:
+                    ease-out;
+            }
+        }
+
+        .hightlight {
+            color: yellow;
+            text-shadow: 0 0 1px red;
+            animation: 1s blink-smooth 3 steps(1);
+        }
+
+        @keyframes blink-smooth {
+            50% {
+                color: transparent;
+                text-shadow: none;
+            }
+        }
+
+        .write {
+            width: 13ch;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right:
+                .05em solid;
+            animation:
+                typing 6s steps(13),
+                caret 1s steps(1) infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width:
+                    0
+            }
+        }
+
+        @keyframes caret {
+            50% {
+                border-color:
+                    transparent;
+            }
+        }
+
+        .animation-img {
+            width: 200px;
+            height: 150px;
+            background: url(../img/c.webp);
+            background-size: auto 100%;
+            animation: panoramic 10s linear infinite;
+            animation-play-state: running;
+
+        }
+
+        .animation-img:hover,
+        .animation-img:focus {
+            animation-play-state: paused;
+        }
+
+        @keyframes panoramic {
+            to {
+                background-position: 100% 0;
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform:
+                    rotate(1turn);
+            }
+        }
+
+
+
+        .avatar {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 1px solid;
+            animation: spin 6s infinite linear;
+            transform-origin: 50% 150px;
+            background: antiquewhite;
+            /* 150px =路径的半径*/
+        }
+
+        .avatar>img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            animation: inherit;
+            animation-direction: reverse;
+        }
+
+        img {
+            position: absolute;
+            left: 125px;
+            top: 10px;
+        }
+
+        .img1 {
+            left: 240px;
+            top: 125px;
+        }
+
+        .img2 {
+            left: 125px;
+            top: 240px;
+        }
+
+        .img3 {
+            left: 10px;
+            top: 125px;
+        }
+
+        .open-c {
+            background-color: khaki;
+        }
+
+
+        .slideShine {
+            background: -webkit-linear-gradient(45deg, #fff 30%, #4539f0 0, #4539f0 50%, #fff 0) no-repeat 0 0, #fff -webkit-linear-gradient(45deg, #fff 30%, #4539f0 0, #4539f0 50%, #fff 0) no-repeat 0 0;
+            background-size: 10% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 36px;
+            text-align: center;
+            font-weight: bold;
+            text-decoration: underline;
+            width: max-content;
+            /* background-repeat-x: repeat; */
+            background-position: 0 0, 60px 0px;
+        }
+
+        .slideShine {
+            -webkit-animation: slideShine 4s linear infinite;
+            animation: slideShine 4s linear infinite;
+        }
+
+        @-webkit-keyframes slideShine {
+            0% {
+                background-position: 0 0, 21% 0;
+            }
+
+            100% {
+                background-position: 100% 100%, 120% 100%;
+            }
+        }
+
+        @keyframes slideShine {
+            0% {
+                background-position: 0 0, 21% 0;
+            }
+
+            100% {
+                background-position: 100% 100%, 120% 100%;
+            }
+        }
+    </style>
+</head>
+
+<body style="background: cadetblue;">
+    <!-- <div class="animation"></div> -->
+    <div class="hightlight">文字闪烁</div>
+    <!-- <div class="write">人生得意须尽欢</div>
+    <div class="animation-img">状态平衡的动画</div>
+    <div class="path">
+        <div class="avatar">
+            <img src="../img/1.webp" alt="">
+            <img src="../img/1.webp" alt="" class="img1">
+            <img src="../img/1.webp" alt="" class="img2">
+            <img src="../img/1.webp" alt="" class="img3">
+        </div>
+    </div> -->
+    <p class="slideShine">→css3文字渐变动画效果 >></p>
+</body>
+
+</html>

@@ -44,11 +44,64 @@
         .the-board {
             background: silver;
             background-image: linear-gradient(45deg, yellow 25%, transparent 0),
-             linear-gradient(45deg, transparent 75%, yellow 0), 
-             linear-gradient(45deg, yellow 25%, transparent 0),
-              linear-gradient(45deg, transparent 75%, yellow 0);
+                linear-gradient(45deg, transparent 75%, yellow 0),
+                linear-gradient(45deg, yellow 25%, transparent 0),
+                linear-gradient(45deg, transparent 75%, yellow 0);
             background-size: 30px 30px;
             background-position: 0 0, 15px 15px, 15px 15px, 30px 30px;
+        }
+
+        .short-horn {
+            background: linear-gradient(45deg, transparent 10px, red 0);
+        }
+
+        .short-two-horn {
+            background: linear-gradient(-45deg, transparent 10px, red 0) bottom, linear-gradient(-135deg, transparent 10px, red 0) top;
+            background-size: 100% 50%;
+            background-repeat: no-repeat;
+        }
+
+        .short-four-horn {
+            background: linear-gradient(45deg, transparent 10px, red 0) bottom left,
+                linear-gradient(-45deg, transparent 10px, red 0) bottom right,
+                linear-gradient(135deg, transparent 10px, red 0) top left,
+                linear-gradient(-135deg, transparent 10px, red 0) top right;
+            background-repeat: no-repeat;
+            background-size: 50% 50%;
+        }
+
+        .one-triangle {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(-45deg, transparent 70px, red 0) bottom, linear-gradient(-135deg, transparent 70px, red 0) top;
+            background-repeat: no-repeat;
+            background-size: 100% 50%;
+        }
+
+        .two-triangle {
+            width: 0;
+            height: 0;
+            border-right: 50px solid transparent;
+            border-left: 50px solid #538ba5;
+            border-bottom: 50px solid transparent;
+            border-top: 50px solid transparent;
+        }
+
+        .round-horn {
+            background: radial-gradient(circle at bottom left, transparent 10px, red 0) bottom left,
+                radial-gradient(circle at bottom right, transparent 10px, red 0) bottom right,
+                radial-gradient(circle at top left, transparent 10px, red 0) top left,
+                radial-gradient(circle at top right, transparent 10px, red 0) top right;
+            background-repeat: no-repeat;
+            background-size: 50% 50%;
+        }
+
+        .effect-of-angle {
+            width: 300px;
+            height: 200px;
+            background: red;
+            background: linear-gradient(-135deg, transparent 50%, rgba(0, 0, 0, .4) 0) no-repeat 100% 0 / 2em 2em,
+                linear-gradient(-135deg, transparent 1.4em, red 0);
         }
     </style>
 </head>
@@ -61,6 +114,13 @@
         <div class="the-grid">网格</div>
         <div class="wave-point">波点</div>
         <div class="the-board">棋盘</div>
+        <div class="short-horn">缺一个角</div>
+        <div class="short-two-horn">缺两个角</div>
+        <div class="short-four-horn">缺四个角</div>
+        <div class="one-triangle">三角形</div>
+        <div class="two-triangle">三角形</div>
+        <div class="round-horn">圆弧缺角</div>
+        <div class="effect-of-angle">折角效果</div>
     </div>
 </body>
 

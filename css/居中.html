@@ -1,75 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>居中</title>
-    <style type="text/css">
-      .flex {
-        width: 100px;
-        height: 100px;
-        background-color: red;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .parent {
-        width: 100px;
-        height: 100px;
-        background-color: gainsboro;
-        position: relative;
-      }
-      .parent .son {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .parent-m {
-        width: 100px;
-        height: 100px;
-        background: aquamarine;
-      }
-      .parent-m .son {
-        margin: 0 auto;
-        width: max-content;
-        line-height: 100px;
-      }
-      .parent-b {
-        width: 100px;
-        height: 100px;
-        background-color: cyan;
-        display: -webkit-box;
-        /* 要么横着，要么竖着 */
-        -webkit-box-orient: horizontal;
-        -webkit-box-pack: center;
-      }
-      .parent-b .son {
-        line-height: 100px;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- flex布局 单行文本-->
-    <div class="flex">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>居中</title>
+  <style type="text/css">
+    .flex {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .parent {
+      width: 100px;
+      height: 100px;
+      background-color: gainsboro;
+      position: relative;
+    }
+
+    .parent .son {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .parent-m {
+      width: 100px;
+      height: 100px;
+      background: aquamarine;
+    }
+
+    .parent-m .son {
+      margin: 0 auto;
+      width: max-content;
+      line-height: 100px;
+    }
+
+    .parent-b {
+      width: 100px;
+      height: 100px;
+      background-color: cyan;
+      display: -webkit-box;
+      /* 要么横着，要么竖着 */
+      -webkit-box-orient: horizontal;
+      -webkit-box-pack: center;
+    }
+
+    .parent-b .son {
+      line-height: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- flex布局 单行文本-->
+  <div class="flex">
+    123
+  </div>
+
+  <!-- positoin: absolute -->
+  <div class="parent">
+    <div class="son">123</div>
+  </div>
+
+  <!-- margin,line-height  -->
+  <div class="parent-m">
+    <div class="son">123</div>
+  </div>
+  <!-- box -->
+  <div class="parent-b">
+    <div class="son">
       123
     </div>
+  </div>
+</body>
 
-    <!-- positoin: absolute -->
-    <div class="parent">
-      <div class="son">123</div>
-    </div>
+</html>
 
-    <!-- margin,line-height  -->
-    <div class="parent-m">
-      <div class="son">123</div>
-    </div>
-    <!-- box -->
-    <div class="parent-b">
-      <div class="son">
-        123
+<!-- 
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>拖放示例-文本</title>
+</head>
+<style>
+  .src {
+    display: flex;
+  }
+
+  .dropabled {
+    flex: 1;
+  }
+
+  .txt {
+    color: green;
+  }
+
+  .img {
+    width: 100px;
+    height: 100px;
+    border: 1px solid gray;
+  }
+
+  .target {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    border: 1px solid gray;
+    color: red;
+  }
+</style>
+
+<body>
+  <div class="src">
+    <div class="dragabled">
+      <div class="txt" id="txt">
+        所有的文字都可拖拽。
+        <p draggable="true" id="dragText">此段文字设置了属性draggable="true"</p>
       </div>
     </div>
-  </body>
-</html>
+    <div id='target' class="dropabled target"></div>
+  </div>
+  <script>
+    var dragSrc = document.getElementById('txt')
+    var target = document.getElementById('target')
+    dragSrc.ondragstart = handle_start
+    dragSrc.ondrag = handle_drag
+    dragSrc.ondragend = handle_end
+
+    function handle_start(e) {
+      e.dataTransfer.setData("dragContent", e.target.id);
+      console.log('dragstart-在元素开始被拖动时候触发', e.target.id)
+    }
+
+    function handle_drag() {
+      console.log('drag-在元素被拖动时候反复触发')
+    }
+
+    function handle_end() {
+      console.log('dragend-在拖动操作完成时触发')
+    }
+
+
+    target.ondragenter = handle_enter
+    target.ondragover = handle_over
+    target.ondragleave = handle_leave
+
+    target.ondrop = handle_drop
+
+    function handle_enter(e) {
+      console.log('handle_enter-当元素进入目的地时触发')
+      // 阻止浏览器默认行为
+      e.preventDefault()
+    }
+
+    function handle_over(e) {
+      console.log('handle_over-当元素在目的地时触发')
+      // 阻止浏览器默认行为
+      e.preventDefault()
+    }
+
+    function handle_leave(e) {
+      console.log('handle_leave-当元素离开目的地时触发')
+      // 阻止浏览器默认行为
+      // e.preventDefault()
+    }
+
+    function handle_drop(e) {
+      e.preventDefault()
+      console.log('handle_drop-当元素在目的地放下时触发')
+      let data = e.dataTransfer.getData('dragContent');
+      console.log(data);
+      e.target.appendChild(document.getElementById(data).cloneNode(true))
+    }
+  </script>
+</body>
+
+</html> -->

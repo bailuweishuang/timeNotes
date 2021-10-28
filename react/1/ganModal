@@ -1,0 +1,812 @@
+const MODE_ADD = 'add';
+const MODE_EDIT = 'edit';
+const MODE_BROWSE = 'browse';
+cb.define(process.env.__DOMAINKEY__, ['common/common_VM.Extend.js', "common/lifeJump_VM.js", 'common/doc_option.Extend.js'],
+    function (common, lifeJump, DocOption) {
+        var PLM_RDPM_rdpmPrjModal_VM_Extend = {
+            doAction: function (name, vm) {
+                if (this[name])
+                    this[name](vm);
+            },
+            init: function (vm) {
+
+                //初始化按钮
+                loadBtn(vm);
+                //项目查询分类过滤以及获取生命周期使用模板
+                operateProClassify(vm);
+                //过滤任务生命周期使用模板
+                operateTaskTpl(vm);
+                window.vmx = vm;
+                vm.firstActiveGroupMemberTab = true;
+                vm.on('tabActiveKeyChange', (params) => {
+
+                    console.log("==================  params  ===========================");
+                    console.log(params);
+                    console.log("========================================================");
+
+                    const paramsMessage = vm.getParams();
+                    console.log(paramsMessage)
+                    const { billData } = paramsMessage;
+                    const data = {
+                        projectId: billData ? billData.id : null,
+                        tableState: paramsMessage ? paramsMessage.mode : null,
+                    }
+                    if (params.key === 'prjWbsGroup20210305') {
+                        vm.execute('loadGanttData', data)
+                    }
+                    //项目团队
+                    if (params.key === 'prjgroupmemberGroup') {
+                        if (vm.firstActiveGroupMemberTab) {
+                            if (vm.getParams().mode === MODE_BROWSE) {
+                                showTabBtnRowToolbar(vm.get("prjGroupMemberList"), false);
+                            }
+                            vm.firstActiveGroupMemberTab = false;
+                        }
+                    }
+                    //项目输出
+                    if (params.key === 'prjOutGroup20210305') {
+                        onTabActiveOutput(vm);
+                    }
+
+                    // if (params.key === 'prjYsGroup20210408') {
+                    //     queryBudgetList(vm);
+                    // }
+                    //
+                    // if(params.key ==='prjZlGroup20210408'){
+                    //     queryQualityList(vm);
+                    // }
+
+
+                });
+
+                // vm.on('cmdPrjBudgetAddRow',function(){
+                //             //
+                //             // });
+
+                // 添加查看文档按钮事件响应
+                addViewDocBtnEvent(vm);
+                // 初始化生命周期跃迁日志
+                initJumpLog(vm, common);
+                // 项目保存
+                proSave(vm);
+
+                // 添加项目团队模板
+                addGroupTpl(vm);
+
+                // 选择项目负责人后 把数据添加到项目团队
+                onPrincipal(vm);
+
+
+                //选择时间时，去除时分秒
+                operateTime(vm);
+                inProgressSetDisable(vm);
+
+                vm.on("afterLoadData", () => {
+
+                    // 审批详情处理
+                    processWfModel(vm);
+
+                })
+            }
+        };
+
+
+        //选择时间时，去除时分秒
+        const operateTime = (vm) => {
+            //计划开始时间
+            vm.get("planStarttime") && vm.get("planStarttime").on("afterValueChange", function (data) {
+                let planStarttime = data.value;
+                if (planStarttime) {
+                    let planStarttimeList = planStarttime.trim().split(/\s+/);
+                    vm.get("planStarttime").setValue(planStarttimeList[0]);
+                }
+            });
+            //计划结束时间
+            vm.get("planEndtime") && vm.get("planEndtime").on("afterValueChange", function (data) {
+                let planEndtime = data.value;
+                if (planEndtime) {
+                    let planEndtimeList = planEndtime.trim().split(/\s+/);
+                    vm.get("planEndtime").setValue(planEndtimeList[0]);
+                }
+            });
+            //实际开始时间
+            vm.get("realStarttime") && vm.get("realStarttime").on("afterValueChange", function (data) {
+                let realStarttime = data.value;
+                if (realStarttime) {
+                    let realStarttimeList = realStarttime.trim().split(/\s+/);
+                    vm.get("realStarttime").setValue(realStarttimeList[0]);
+                }
+            });
+            //实际结束时间
+            vm.get("realEndtime") && vm.get("realEndtime").on("afterValueChange", function (data) {
+                let realEndtime = data.value;
+                if (realEndtime) {
+                    let realEndtimeList = realEndtime.trim().split(/\s+/);
+                    vm.get("realEndtime").setValue(realEndtimeList[0]);
+                }
+            });
+        }
+
+        //初始化按钮
+        const loadBtn = (vm) => {
+            //加载元数据
+            vm.on("afterLoadMeta", function (meta) {
+                vm.getParams().caption = "项目";
+                // modeChange(meta.vm.getParams().mode);
+
+                // 隐藏掉项目团队模板参照框
+                vm.get("groupRefer_id").setVisible(false);
+            });
+
+            vm.get("prjGroupMemberList").on("afterSetDataSource", function () {
+                // 按钮隐藏 显示
+                let mode = vm.getParams().mode;
+                if (mode === MODE_BROWSE) {
+                    vm.get("btnAddGt") && vm.get("btnAddGt").setVisible(false);
+                    vm.get("btnAddRowprjGroupMember") && vm.get("btnAddRowprjGroupMember").setVisible(false);
+                    showTabBtnRowToolbar(vm.get("prjGroupMemberList"), false);
+                }
+            });
+            vm.on('beforeEdit', (params) => {
+                modeChange(MODE_EDIT);
+            });
+            //模式更改事件响应
+            vm.on("modeChange", (param) => {
+                let { mode } = vm.getParams();
+                modeChange(mode);
+            });
+            //模态变化 显示控制
+            let modeChange = (mode) => {
+                if (mode === MODE_EDIT) {
+                    showTopBtn(vm, false);
+                    showBottomBtn(vm, true);
+
+                    // 操作信息
+                    showOperInfo(vm, true);
+
+                    // 子页签按钮
+                    showTabBtnToolbar(vm, true);
+
+                    // 项目团队
+                    onTabActiveGroupMember(vm);
+                    showTabBtnRowToolbar(vm.get("prjGroupMemberList"), true);
+
+                } else if (mode === MODE_BROWSE) {
+                    showTopBtn(vm, true);
+                    showBottomBtn(vm, false);
+
+                    // 操作信息
+                    showOperInfo(vm, false);
+                    // 取消处理
+                    vm.getGridModels().forEach(gridModel => {
+                        showTabBtnRowToolbar(gridModel, false);
+                    });
+                    // 项目团队
+                    onTabActiveGroupMember(vm);
+                }
+            };
+            // 子页签初始化
+            initTabActive(vm);
+        };
+        //显示顶部按钮
+        const showTopBtn = (vm, bShow) => {
+            if (bShow == undefined) {
+                return;
+            }
+            //顶部按钮
+            let btnEdit = vm.get("btnEdit");
+            let btnDelete = vm.get("btnDelete");
+            let btnAbandonBrowst = vm.get("btnAbandonBrowst");
+            btnAbandonBrowst && btnAbandonBrowst.setVisible(bShow);
+            btnEdit && btnEdit.setVisible(bShow);
+            btnDelete && btnDelete.setVisible(bShow);
+        };
+        //显示底部按钮
+        const showBottomBtn = (vm, bShow) => {
+            if (bShow == undefined) {
+                return;
+            }
+            //底部按钮
+            let btnSave = vm.get("btnSave");
+            let btnAbandon = vm.get("btnAbandon");
+
+            btnSave && btnSave.setVisible(bShow);
+            btnAbandon && btnAbandon.setVisible(bShow);
+
+        };
+
+        /**
+         * 初始化子页签显示隐藏
+         *
+         * @param vm
+         */
+        const initTabActive = (vm) => {
+            vm.on('afterTabActiveKeyChange', function (data) {
+                const mode = vm.getParams().mode;
+                let gridModelKey;
+                if (data.key.split('_')[1] && data.key.endsWith("List")) {
+                    gridModelKey = data.key.split('_')[1];
+                }
+                if (mode === MODE_EDIT && gridModelKey) {
+                    showTabBtnToolbar(vm, true);
+                    showTabBtnRowToolbar(vm.getGridModel(gridModelKey), true);
+
+                } else if (mode === MODE_BROWSE && gridModelKey) {
+                    showTabBtnToolbar(vm, false);
+                    showTabBtnRowToolbar(vm.getGridModel(gridModelKey), false);
+                }
+            });
+        };
+
+        /**
+         * 子页签行操作按钮显示隐藏
+         *
+         * @param gridModel
+         * @param bShow
+         */
+        const showTabBtnRowToolbar = (gridModel, bShow) => {
+            const actionsStates = [];
+            const actions = gridModel.getCache('actions');
+            if (actions) {
+                const rows = gridModel.getRows();
+                rows.forEach(element => {
+                    const actionState = {};
+                    actions.forEach(action => {
+                        actionState[action.cItemName] = { visible: bShow };
+                        actionsStates.push(actionState);
+                    });
+                });
+            }
+            gridModel.setActionsState(actionsStates);
+        };
+
+        /**
+         *  子页签批量操作按钮显示隐藏
+         * @param vm
+         * @param bShow
+         */
+        const showTabBtnToolbar = (vm, bShow) => {
+            // 子页签增行
+            vm.get("btnPrjProductAddRow") && vm.get("btnPrjProductAddRow").setVisible(bShow);
+            vm.get("btnPrjBudgetAddRow") && vm.get("btnPrjBudgetAddRow").setVisible(bShow);
+            vm.get("btnPrjQualityAddRow") && vm.get("btnPrjQualityAddRow").setVisible(bShow);
+            vm.get("btnPrjCheckItemAddRow") && vm.get("btnPrjCheckItemAddRow").setVisible(bShow);
+            vm.get("btnPrjRiskAddRow") && vm.get("btnPrjRiskAddRow").setVisible(bShow);
+            vm.get("btnAddGt") && vm.get("btnAddGt").setVisible(bShow);
+            vm.get("btnAddRowprjGroupMember") && vm.get("btnAddRowprjGroupMember").setVisible(bShow);
+
+            // 子页签删行
+            vm.get("btnPrjProductDelRows") && vm.get("btnPrjProductDelRows").setVisible(bShow);
+            vm.get("btnPrjBudgetDelRows") && vm.get("btnPrjBudgetDelRows").setVisible(bShow);
+            vm.get("btnPrjQualityDelRows") && vm.get("btnPrjQualityDelRows").setVisible(bShow);
+            vm.get("btnPrjCheckItemDelRows") && vm.get("btnPrjCheckItemDelRows").setVisible(bShow);
+            vm.get("btnPrjRiskDelRows") && vm.get("btnPrjRiskDelRows").setVisible(bShow);
+        };
+
+        /**
+         * 操作信息显示隐藏
+         *
+         * @param vm
+         */
+        const showOperInfo = (vm, bShow) => {
+            vm.get("creator_userName").setVisible(bShow);
+            vm.get("creationtime").setVisible(bShow);
+            vm.get("modifier_userName").setVisible(bShow);
+            vm.get("modifiedtime").setVisible(bShow);
+        };
+
+        //项目分类过滤并获取生命周期使用模板
+        const operateProClassify = (vm) => {
+            vm.get("classifyId_name") && vm.get("classifyId_name").on("beforeBrowse", function (data) {
+                const simpleVOs = [];
+                //查询状态为启用的分类
+                simpleVOs.push({ field: "state", op: "eq", value1: '1' });
+                const condition = {
+                    "isExtend": true,
+                    simpleVOs: simpleVOs
+                };
+                this.setTreeFilter(condition);
+            });
+            //分类选择之后，获取项目生命周期使用模板，预置进项目中
+            vm.get("classifyId_name").on("afterValueChange", function (data) {
+                const classifyId = data.value.id;
+                setProLifecycleInfo(vm, classifyId);
+            });
+        };
+
+        //过滤任务生命周期使用模板
+        const operateTaskTpl = (vm) => {
+            let taskLifecycleUseId_name = vm.get("taskLifecycleUseId_name");
+            //查询生命周期使用模板
+            taskLifecycleUseId_name && taskLifecycleUseId_name.on("beforeBrowse", function (data) {
+                const simpleVOs = [];
+                simpleVOs.push({ field: "object_type", op: "eq", value1: '10130' });
+                const condition = {
+                    "isExtend": true,
+                    simpleVOs: simpleVOs
+                };
+                this.setFilter(condition);
+            });
+        };
+
+        // 审批状态、生命周期状态、审批详情处理
+        const processWfModel = (vm) => {
+            if (vm.originalParams) {
+                let query = vm.originalParams.query;
+                if (query && query.detailModel && query.detailModel == "wfmodel") {
+                    setAllButtonVisible()
+                }
+            }
+            const data = vm.getAllData();
+            let lifecycleAttrIdStatus =
+                data.lifecycleAttrId_name === "已完成" ||
+                data.lifecycleAttrId_name === "已中止" ||
+                data.lifecycleAttrId_name === "已暂停" ||
+                data.wfstate === 1;
+            if (lifecycleAttrIdStatus) {
+                setAllButtonVisible()
+            }
+        };
+
+        // 隐藏所有可操作的按钮
+        const setAllButtonVisible = (vm) => {
+            const buttonArr = ["btnEdit", "btnDelete", 'btnCardUIModel', "btnMoveprev", "btnMovenext"]
+            buttonArr.forEach((item) => {
+                vm.get(item) && vm.get(item).setVisible(false);
+            })
+        }
+        // 生命状态为执行中禁止所有基本信息修改
+        const inProgressSetDisable = (vm) => {
+            vm.get("btnEdit") && vm.get("btnEdit").on('click', () => {
+                const data = vm.getAllData();
+                let lifecycleAttrIdStatus =
+                    data.lifecycleAttrId_name === "执行中";
+                if (lifecycleAttrIdStatus) {
+                    vm.on("afterEdit", () => {
+                        const data = vm.getDirtyData();
+                        for (let item in data) {
+                            if (typeof data[item] !== 'array') {
+                                vm.get(item) && vm.get(item).setDisabled(true);
+                            }
+                        }
+                        vm.get("startWarning") && vm.get("startWarning").setDisabled(true);
+                        vm.get("endWarning") && vm.get("endWarning").setDisabled(true);
+                        vm.get("principal_name") && vm.get("principal_name").setDisabled(true);
+                    })
+                }
+
+            })
+
+        }
+        //根据分类id设置项目生命周期信息
+        const setProLifecycleInfo = (vm, classifyId) => {
+            //获取分类详情
+            const proxy = cb.rest.DynamicProxy.create({
+                ensure: {
+                    url: "/bill/detail",
+                    method: "GET",
+                    options: { domainKey: process.env.__DOMAINKEY__ },
+                }
+            });
+            const reqParams = {
+                billnum: "rdpmPrjCgr",
+                id: classifyId,
+            };
+            proxy.ensure(reqParams, function (err, result) {
+                if (err) {
+                    cb.utils.alert(err.message, "error");
+                    return;
+                } else {
+                    //生命周期使用模板预置
+                    vm.get("lifecycleUseId_name").setValue([{
+                        id: result.proLifecycleUseId,
+                        name: result.proLifecycleUseId_name
+                    }]);
+                    //生命周期模板预置
+                    vm.get("lifecycleId_name").setValue([{ id: result.proLifecycleId, name: result.proLifecycleId_name }]);
+                    //生命周期状态预置
+                    vm.get("lifecycleAttrId_name").setValue([{
+                        id: result.proLifecycleAttrId,
+                        name: result.proLifecycleAttrId_name
+                    }]);
+                    //生命周期状态池预置
+                    vm.get("lifecycleAttrpoolId_name").setValue([{
+                        id: result.proLifecycleAttrpoolId,
+                        name: result.proLifecycleAttrpoolId_name
+                    }]);
+                }
+            });
+        }
+
+        /**
+         * 初始化跃迁记录
+         */
+        const initJumpLog = (vm, common) => {
+            lifeJump.initJumpHistory(vm, common, "project");
+        };
+        //项目团队
+        const onTabActiveGroupMember = (vm) => {
+            let gridModel = vm.get('prjGroupMemberList');
+            if (gridModel !== undefined) {
+                const pageParams = vm.getParams();
+                let projectId = pageParams ? pageParams.id : null;
+                getProjectGroupMember(projectId, (data) => {
+                    if (data != null && Array.isArray(data)) {
+                        gridModel.clear();
+                        let listMember = data.map((item, index) => {
+                            return {
+                                ...item,
+                                key: index,
+                            }
+                        });
+                        gridModel.setDataSource(listMember);
+                        // let arr = gridModel._data().rowsDataState;
+                    }
+                });
+            }
+
+        };
+
+
+        //查询质量列表
+        const queryQualityList = (vm) => {
+            console.log("--     查询质量列表     -----");
+            let gridModel = vm.get('prjQualityList');
+            if (gridModel != undefined) {
+                const pageParams = vm.getParams();
+                let projectId = pageParams ? pageParams.id : null;
+
+                if (projectId == undefined) {
+                    return;
+                }
+                const proxy = cb.rest.DynamicProxy.create({
+                    ensure: {
+                        url: "/project/listQuality",
+                        method: "GET",
+                        options: { domainKey: process.env.__DOMAINKEY__ },
+                    }
+                });
+
+                const reqParams = {
+                    billnum: "rdpmPrjModal",
+                    projectId: projectId,
+                };
+
+                proxy.ensure(reqParams, function (err, result) {
+                    if (err) {
+                        cb.utils.alert(err.message, "error");
+                    } else {
+                        if (result != null && Array.isArray(result)) {
+                            gridModel.clear();
+                            let listDoc = result.map((item, index) => {
+                                return {
+                                    ...item,
+                                    key: index,
+                                }
+                            });
+
+                            gridModel.insertRows(0, listDoc);
+                        }
+                    }
+                });
+            }
+        };
+
+        //查询预算列表
+        const queryBudgetList = (vm) => {
+            console.log("--     查询预算列表     -----");
+            let gridModel = vm.get('prjBudgetList');
+            if (gridModel != undefined) {
+                const pageParams = vm.getParams();
+                let projectId = pageParams ? pageParams.id : null;
+
+                if (projectId == undefined) {
+                    return;
+                }
+                const proxy = cb.rest.DynamicProxy.create({
+                    ensure: {
+                        url: "/project/listBudget",
+                        method: "GET",
+                        options: { domainKey: process.env.__DOMAINKEY__ },
+                    }
+                });
+
+                const reqParams = {
+                    billnum: "rdpmPrjModal",
+                    projectId: projectId,
+                };
+
+                proxy.ensure(reqParams, function (err, result) {
+                    if (err) {
+                        cb.utils.alert(err.message, "error");
+                    } else {
+
+                        if (result != null && Array.isArray(result)) {
+                            gridModel.clear();
+                            let listDoc = result.map((item, index) => {
+                                return {
+                                    ...item,
+                                    key: index,
+                                }
+                            });
+
+                            gridModel.insertRows(0, listDoc);
+                        }
+                    }
+                });
+            }
+        };
+
+
+        //项目输出
+        const onTabActiveOutput = (vm) => {
+
+            let gridModel = vm.get('prjTaskDocLinkList');
+            if (gridModel != undefined) {
+                const pageParams = vm.getParams();
+                let projectId = pageParams ? pageParams.id : null;
+                getProjectOuputDoc(projectId, (data) => {
+                    if (data != null && Array.isArray(data)) {
+                        gridModel.clear();
+                        let listDoc = data.map((item, index) => {
+                            return {
+                                ...item,
+                                key: index,
+                            }
+                        });
+
+                        gridModel.setDataSource(listDoc);
+                    }
+                });
+                // //添加测试数据for test
+                // gridModel.insertRows(0, [
+                //     {
+                //         docCode: 'AA',
+                //         docId_name: '测试文档1',
+                //         docRevision: 'A',
+                //         docVersion: '1',
+                //         taskId_name: '测试任务1',
+                //     },
+                //     {
+                //         docCode: 'BB',
+                //         docId_name: '测试文档2',
+                //         docRevision: 'A',
+                //         docVersion: '1',
+                //         taskId_name: '测试任务1',
+                //     },
+                //     {
+                //         docCode: 'CC',
+                //         docId_name: '测试文档3',
+                //         docRevision: 'A',
+                //         docVersion: '1',
+                //         taskId_name: '测试任务2',
+                //     },
+                //     {
+                //         docCode: 'DD',
+                //         docId_name: '测试文档4',
+                //         docRevision: 'A',
+                //         docVersion: '1',
+                //         taskId_name: '测试任务2',
+                //     }
+                // ]);
+            }
+        };
+
+        //查看文档
+        const addViewDocBtnEvent = (vm) => {
+            vm.get("btnViewDoc") && vm.get("btnViewDoc").on('click', function (params) {
+                debugger
+                let lstLinkDoc = vm.get("prjTaskDocLinkList");
+                let rowData = lstLinkDoc.getRow(params.index);
+                if (!rowData) {
+                    cb.utils.alert(cb.lang.template("P_YS_PLM_PSDM-FE_0001106901") /* "请选择文档后，再执行查看" */, "message");
+                    return;
+                }
+                if (!rowData.docCode || !rowData.docRevision) {
+                    cb.utils.alert(cb.lang.template("P_YS_PLM_PSDM-FE_0001106887") /* "没有查到有效文档信息（编码版本）" */, "error");
+                    return;
+                }
+                let partParam = {
+                    code: rowData.docCode,
+                    revision: rowData.docRevision,
+                    version: rowData.docVersion
+                }
+                common.scanDocDetail(vm, partParam, rowData.docId_name);
+            });
+            vm.get("btnDownloadDoc") && vm.get("btnDownloadDoc").on('click', (params) => {
+                let prjTaskDocLinkList = vm.getGridModel('prjTaskDocLinkList')
+                let rowData = prjTaskDocLinkList.getRow(params.index);
+                if (!rowData || !rowData.docId) {
+                    cb.utils.alert("请选择文档后，再执行下载", "message");
+                    return;
+                }
+                DocOption.downloadDoc(rowData.docId);
+            });
+        };
+
+
+        //获取项目团队成员
+        const getProjectGroupMember = (projectId, callback) => {
+            if (projectId == undefined) {
+                return;
+            }
+            const proxy = cb.rest.DynamicProxy.create({
+                ensure: {
+                    url: "/project/listGroupMember",
+                    method: "GET",
+                    options: { domainKey: process.env.__DOMAINKEY__ },
+                }
+            });
+
+            const reqParams = {
+                billnum: "rdpmPrjModal",
+                projectId: projectId,
+            };
+
+            proxy.ensure(reqParams, function (err, result) {
+                if (err) {
+                    cb.utils.alert(err.message, "error");
+                } else {
+                    if (callback) {
+                        callback(result);
+                    }
+                }
+            });
+        }
+
+        //获取项目输出文档
+        const getProjectOuputDoc = (projectId, callback) => {
+            if (projectId == undefined) {
+                return;
+            }
+            const proxy = cb.rest.DynamicProxy.create({
+                ensure: {
+                    url: "/project/listOutputDoc",
+                    method: "GET",
+                    options: { domainKey: process.env.__DOMAINKEY__ },
+                }
+            });
+
+            const reqParams = {
+                billnum: "rdpmPrjModal",
+                projectId: projectId,
+            };
+
+            proxy.ensure(reqParams, function (err, result) {
+                if (err) {
+                    cb.utils.alert(err.message, "error");
+                } else {
+                    if (callback) {
+                        callback(result);
+                    }
+                }
+            });
+        }
+
+        //项目保存
+        const proSave = (vm) => {
+            //保存之前
+            vm.on('beforeSave', (params) => {
+                cb.utils.confirm({
+                    title: "确认保存？",
+                    onOk: () => {
+                        executeSave(vm);
+                    },
+                    onCancel: () => {
+                    }
+                });
+                return false;
+            });
+        };
+        //执行保存
+        let executeSave = (vm) => {
+            let data2save = vm.collectData();
+            if (!data2save) return;
+            //添加日历数据
+            let projectCalendarCtrl = vm.getCache("projectCalendarCtrl");
+            if (projectCalendarCtrl != undefined) {
+                data2save.projectCalendarData = projectCalendarCtrl.getCalendarSaveData();
+            }//添加日历数据结束
+
+            let id = vm.get('id').getValue();
+            if (id != undefined && id != '') {
+                data2save._status = cb.models.DataStates.Update
+            } else {
+                data2save._status = cb.models.DataStates.Insert;
+            }
+            let saveParam = {
+                billnum: vm.getParams()["billNo"],
+                data: JSON.stringify(data2save)
+            }
+            let proxy = cb.rest.DynamicProxy.create({
+                ensure: {
+                    url: "/project/save",
+                    method: "POST",
+                    options: {
+                        domainKey: process.env.__DOMAINKEY__
+                    }
+                }
+            });
+            proxy.ensure(saveParam, function (err, result) {
+                if (err) {
+                    cb.utils.alert(err.message, "error");
+                    return;
+                } else {
+                    cb.utils.alert(cb.lang.template("保存成功"));
+                    vm.communication({ type: 'return' });
+                    return;
+                }
+            });
+        }
+
+        const addGroupTpl = (vm) => {
+            vm.get("btnAddGt").on("click", function () {
+                // 打开参照框
+                vm.get("groupRefer_id").browse();
+
+                vm.get("groupRefer_id").on("afterReferOkClick", datas => {
+                    // 存模板id，用来查询里面的角色信息
+                    let tplIds = [];
+                    datas.forEach(data => {
+                        tplIds.push(data.id);
+                    });
+
+                    if (tplIds.length > 0) {
+                        const proxy = cb.rest.DynamicProxy.create({
+                            ensure: {
+                                url: "/teamTpl/getRoles",
+                                method: "GET",
+                                options: { domainKey: process.env.__DOMAINKEY__ },
+                            }
+                        });
+                        const reqParams = {
+                            teamTplIds: tplIds,
+                        };
+                        proxy.ensure(reqParams, function (err, result) {
+                            if (err) {
+                                cb.utils.alert(err.message, "error");
+                                return;
+                            } else {
+                                // 获取项目团队gridModel
+                                let gridModel = vm.get("prjGroupMemberList");
+                                let length = gridModel.getRows().length;
+                                result.forEach(data => {
+                                    let role = {};
+                                    role.roleId_name = data.name;
+                                    role.roleId = data.roleId;
+                                    gridModel.insertRow(length, role);
+                                    length++;
+                                });
+                            }
+                        });
+                    }
+
+                });
+            });
+        };
+
+        const onPrincipal = (vm) => {
+            vm.get("principal_name").on("afterReferOkClick", datas => {
+                let data = datas[0];
+                vm.get("principal").setValue(data.id);
+                vm.get("principal_id").setValue(data.userId);
+                let groupMember = {};
+                groupMember.member_name = data.name;
+                groupMember.member = data.id;
+                groupMember.code = data.code;
+                groupMember.name = data.name;
+                groupMember.member_id = data.userId;
+                let gridModel = vm.get("prjGroupMemberList");
+                let length = gridModel.getRows().length;
+                gridModel.insertRow(length, groupMember);
+            });
+        };
+
+        //
+        try {
+            module.exports = PLM_RDPM_rdpmPrjModal_VM_Extend;
+        } catch (error) {
+            console.error(error);
+        }
+        return PLM_RDPM_rdpmPrjModal_VM_Extend;
+    });

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        /* flex布局 */
+        /* .content {
+            display: flex;
+            height: 200px;
+        }
+
+        .first {
+            flex-basis: 200px;
+            background: antiquewhite;
+        }
+
+        .second {
+            flex: 1;
+            background: skyblue;
+        }
+
+        .third {
+            flex-basis: 200px;
+            background: aquamarine;
+        } */
+        /* calc计算 */
+        /* .content {
+            font-size: 0;
+        }
+
+        .content>div {
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .first {
+            width: 200px;
+            background: antiquewhite;
+        }
+
+        .second {
+            width: calc(100% - 400px);
+            background: skyblue;
+        }
+
+        .third {
+            width: 200px;
+            background: aquamarine;
+        } */
+
+        main {
+            width: 100%;
+            padding: 39px 29px;
+            font-size: 12px;
+        }
+
+        .content {
+            box-shadow: 0 0 0 1px #eee;
+        }
+
+        .content::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .content>div {
+            height: 229px;
+            line-height: 1.5em;
+            text-align: center;
+            float: left;
+            color: rgb(245, 16, 16);
+        }
+
+        .content .second,
+        .content .third {
+            width: 119px;
+            padding-top: 29px;
+            background: #b4a078;
+        }
+
+        .content .second {
+            margin-left: -100%;
+        }
+
+        .content .first {
+            width: 100%;
+        }
+
+        .content .third {
+            margin-left: -119px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="first">
+            <div>
+                A paragraph of filler text. La la la de dah de dah de dah de la.
+            </div>
+        </div>
+        <div class="second">456</div>
+        <div class="third">789</div>
+    </div>
+</body>
+
+</html>

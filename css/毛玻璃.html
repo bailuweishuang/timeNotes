@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毛玻璃</title>
+    <style type="text/css">
+        .content {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 560px;
+            height: 400px;
+            background-image: url('../img/1.webp');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+        }
+
+        .content-fix {
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            background: hsla(0, 0%, 100%, .3);
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 0 6px 1px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .content-fix::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background-image: url('../img/1.webp');
+            filter: blur(20px);
+            z-index: -1;
+            margin: -30px;
+            background-position: center top;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+
+        ul li:first-child,
+        ul li:first-child:nth-last-child(3)~li {
+            color: red;
+        }
+        ul li:first-child,
+        ul li:first-child:nth-last-child(4)~li {
+            color: rgb(111, 0, 255);
+        }
+        .sss {
+            margin: 0 calc(50% - 450px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="content-fix">
+            上面代码定义了一个“类”，可以看到里面有一个constructor()方法，这就是构造方法，而this关键字则代表实例对象。这种新的 Class 写法，本质上与本章开头的 ES5 的构造函数Point是一致的。
+        </div>
+    </div>
+    <ul>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+    </ul>
+    <div>
+        <div class="sss">1111111111111111111</div>
+    </div>
+</body>
+
+</html>

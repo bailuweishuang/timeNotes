@@ -1,0 +1,783 @@
+process.env.__CLIENT__ &&
+    require("../../common/styles/plm_rdpm_rdpmPrjGanttModal.less");
+const NewDialog = require("../../client/web/components/basic/output/NewDialog.jsx")
+    .default;
+cb.define(
+    process.env.__DOMAINKEY__,
+    [
+        "common/common_VM.Extend.js",
+        "common/lifeJump_VM.js",
+        "common/doc_option.Extend.js",
+        "common/outputType.Extend.js",
+    ],
+    function (common, lifeJump, DocOption, OutPutTypeOption) {
+        var PLM_RDPM_rdpmPrjGanttModal_VM_Extend = {
+            doAction: function (name, vm) {
+                if (this[name]) this[name](vm);
+            },
+            init: function (vm) {
+                window.vmx = vm;
+                // 子页签初始化
+                saveAllInit(vm);
+                /**
+                 * 初始化生命周期跃迁日志
+                 */
+                initJumpLog(vm, common);
+                /**
+                 * 生命周期跃迁设置
+                 *
+                 * @param vm
+                 * @param common
+                 */
+                jumpSetting(vm, common);
+
+                const params = vm.getParams();
+                let taskId = params.query.id ?? params.taskId;
+                // let paramsObj = {};
+                // 查看负载
+                vm.get("personnelLoad") &&
+                    vm.get("personnelLoad").on("click", function () {
+                        cb.loader.runCommandLine(
+                            "bill",
+                            {
+                                billtype: "VoucherList",
+                                billno: "rdpmPrjUndertakeTaskList",
+                                params: {
+                                    query: {},
+                                    metaType: "VoucherList",
+                                    principal: vm.get("principal").getValue(),
+                                    lifecycleUseId: params.lifecycleUseId,
+                                },
+                            },
+                            vm
+                        );
+                    });
+                if (params.readOnly) {
+                    vm.get("btnganttcancel").setVisible(false);
+                    vm.get("btnganttsave").setVisible(false);
+                    vm.get("btnDel").setVisible(false);
+                    // vm.get('personnelLoad').setVisible(false)
+                }
+                if (!params.readOnly) {
+                    let oldChangeData, timeChange = false;
+                    vm.on("afterLoadData", () => {
+                        const oldData = vm.getDirtyData();
+                        const paramsTask = params.newTask || {};
+                        const { start_date, end_date, progress, duration, code, hasGantTaskChild, timeLocked, paramLocked, text, classifyCode } = paramsTask;
+                        for (let item in oldData) {
+                            if (item in paramsTask) {
+                                vm.get(item).setValue(paramsTask[item])
+                            }
+                        }
+                        const timeCode = code
+                            ? code
+                            : `task${String(new Date().getTime()).slice(-8)}`;
+                        vm.get("name").setValue(text);
+                        vm.get("code").setValue(timeCode);
+                        vm.get("planStarttime").setValue(start_date);
+                        vm.get("planEndtime").setValue(end_date);
+                        vm.get("reportProgress").setValue(progress ? progress * 100 : 0);
+                        vm.get("planDuration").setValue(duration);
+                        vm.get("projectId").setValue(params.projectId);
+                        vm.get("projectId_name").setValue(params.projectName);
+                        if (hasGantTaskChild) {
+                            vm.get("reportProgress").setDisabled(true);
+                            vm.get("planStarttime").setDisabled(true);
+                            vm.get("planEndtime").setDisabled(true);
+                            vm.get("planDuration").setDisabled(true);
+                        }
+                        if (!vm.get("grpMember_name") || !vm.get("grpMember_name").getValue()) {
+                            vm.get("personnelLoad").setDisabled(true);
+                        }
+                        vm.get("grpMember_name") &&
+                            vm.get("grpMember_name").on("afterValueChange", (data) => {
+                                let disabled = data.value ? false : true;
+                                vm.get("personnelLoad").setDisabled(disabled);
+                            });
+                        if (!oldData.createorg_name) {
+                            vm.get("createorg").setValue(params.candOorgData.createorg);
+                            vm.get("createorg_name").setValue(
+                                params.candOorgData.createorg_name
+                            );
+                        }
+                        if (!oldData.ownedorg_name) {
+                            vm.get("ownedorg").setValue(params.candOorgData.ownedorg);
+                            vm.get("ownedorg_name").setValue(
+                                params.candOorgData.ownedorg_name
+                            );
+                        }
+                        // 编制中不允许修改进度
+                        if (!classifyCode || classifyCode === "EDITING") {
+                            vm.get("reportProgress").setDisabled(true);
+                        }
+                        oldChangeData = vm.getAllData();
+                        if (params.mode == "add" || params.mode == "edit") {
+                            vm.get("realStarttime").setVisible(false);
+                            vm.get("realEndtime").setVisible(false);
+                            vm.get("realDuration").setVisible(false);
+                            vm.get("realWorkHour").setVisible(false);
+                        }
+                        if (params.mode == "add" || params.readOnly) {
+                            vm.get("btnDel").setVisible(false);
+                        }
+                        if (params.mode == "edit") {
+                            if (timeLocked) {
+                                vm.get("planStarttime").setDisabled(true);
+                                vm.get("planEndtime").setDisabled(true);
+                                vm.get("planDuration").setDisabled(true);
+                            }
+                            if (paramLocked) {
+                                vm.get("ownedorg_name").setDisabled(true);
+                                vm.get("name").setDisabled(true);
+                                vm.get("outputType_name").setDisabled(true);
+                                vm.get("principalRole_name").setDisabled(true);
+                                vm.get("grpMember_name").setDisabled(true);
+                                vm.get("reportProgress").setDisabled(true);
+                                vm.get("realWorkHour").setDisabled(true);
+                                vm.get("planWorkHour").setDisabled(true);
+                                vm.get("description").setDisabled(true);
+                                vm.get("startWarning").setDisabled(true);
+                                vm.get("startWarningRole_name").setDisabled(true);
+                                vm.get("endWarning").setDisabled(true);
+                                vm.get("endWarningRole_name").setDisabled(true);
+                            }
+                            if (paramLocked && timeLocked) {
+                                vm.get("btnganttsave") &&
+                                    vm.get("btnganttsave").setDisabled(true);
+                            }
+                            if (paramLocked || timeLocked) {
+                                vm.get("btnDel") && vm.get("btnDel").setDisabled(true);
+                            }
+                            vm.get("startState").setDisabled(true);
+                        }
+                        // 参照点击之前
+                        vm.get("grpMember_name") &&
+                            vm.get("grpMember_name").on("beforeBrowse", function () {
+                                const condition = {
+                                    isExtend: true,
+                                    simpleVOs: [],
+                                };
+                                condition.simpleVOs.push({
+                                    field: "projectId",
+                                    op: "eq",
+                                    value1: params.projectId,
+                                });
+                                this.setFilter(condition);
+                            });
+                        vm.get("btnDel") &&
+                            vm.get("btnDel").on("click", function () {
+                                params.deleteTask(taskId);
+                                vm.communication({ type: "modal", payload: { data: false } });
+                            });
+
+                        vm.get("planStarttime") &&
+                            vm.get("planStarttime").on("afterValueChange", (value) => {
+                                timeChange = true;
+                                let endlisteners = vm.get("planEndtime").get("listeners");
+                                let endDatePickerControl = endlisteners
+                                    ? endlisteners[0]
+                                    : null;
+                                if (endDatePickerControl != undefined) {
+                                    endDatePickerControl.setState({
+                                        outMinDate: `${value.value.split(" ")[0]} 23:59:59`,
+                                        outMaxDate: params.candOorgData.disabledEndTime,
+                                    });
+                                }
+                            });
+                        vm.get("planEndtime") &&
+                            vm.get("planEndtime").on("afterValueChange", () => {
+                                timeChange = true;
+                            });
+                    })
+                    // 删除
+                    vm.get("btnDel") &&
+                        vm.get("btnDel").on("click", function () {
+                            params.deleteTask(taskId);
+                            vm.communication({ type: "modal", payload: { data: false } });
+                        });
+                    // 非编制中不允许修改
+                    if (params.newTask.classifyCode) {
+                        if (params.newTask.classifyCode !== "EDITING") {
+                            vm.get("btnganttsave") && vm.get("btnganttsave").setDisabled(true)
+                        }
+                    }
+                    // 取消
+                    vm.get("btnganttcancel") &&
+                        vm.get("btnganttcancel").on("click", () => {
+                            vm.communication({ type: "modal", payload: { data: false } });
+                        });
+                    // 保存
+                    vm.on("beforeSaveExecute", () => {
+                        let paramsObj = {};
+                        const data = vm.getAllData();
+                        paramsObj.progress = data.reportProgress / 100;
+                        paramsObj.start_date = data.planStarttime;
+                        paramsObj.end_date = data.planEndtime;
+                        paramsObj.duration = data.planDuration;
+                        paramsObj.text = data.name;
+                        for (let item in data) {
+                            if (data[item]) {
+                                if (typeof data[item] === 'string' || typeof data[item] === 'number') {
+                                    paramsObj[item] = data[item]
+                                }
+                            }
+                        }
+                        const dirtyData = vm.getDirtyData();
+                        if (params.mode == "add") {
+                            paramsObj.timeVersion = 0;
+                            paramsObj.paramVersion = 0;
+                            paramsObj.id = taskId;
+                            if (
+                                !!paramsObj.text &&
+                                !!paramsObj.start_date &&
+                                !!paramsObj.end_date
+                            ) {
+                                params.modalOkAction("add", paramsObj, taskId, dirtyData);
+                                vm.communication({ type: "modal", payload: { data: false } });
+                                return false;
+                            }
+                        } else {
+                            if (!!paramsObj.text &&
+                                !!paramsObj.start_date &&
+                                !!paramsObj.end_date) {
+                                const changeList = [];
+                                for (let key in data) {
+                                    if (typeof data[key] === 'string' || typeof data[key] === 'number') {
+                                        if (oldChangeData[key] !== data[key]) {
+                                            changeList.push(key)
+                                        }
+                                    }
+
+                                }
+                                const otherList = changeList.filter((item) => item !== "planStarttime" && item !== "planEndtime")
+                                if (timeChange) {
+                                    // 属性锁和时间锁
+                                    if (otherList.length > 0) {
+                                        params.modalOkAction(
+                                            "edit",
+                                            paramsObj,
+                                            taskId,
+                                            "PANDT",
+                                            dirtyData
+                                        );
+                                    } else {
+                                        // 时间锁
+                                        params.modalOkAction(
+                                            "edit",
+                                            paramsObj,
+                                            taskId,
+                                            "TIME",
+                                            dirtyData
+                                        );
+                                    }
+                                } else {
+                                    // 属性锁
+                                    params.modalOkAction(
+                                        "edit",
+                                        paramsObj,
+                                        taskId,
+                                        "PARAMS",
+                                        dirtyData
+                                    );
+                                }
+
+                                vm.communication({ type: "modal", payload: { data: false } });
+                                return false;
+                            }
+                        }
+
+                    })
+                    // 设置时间限制
+                    vm.on("afterMount", function (data) {
+                        let listeners = vm.get("planStarttime").get("listeners");
+                        let datePickerControl = listeners ? listeners[0] : null;
+                        if (datePickerControl != undefined) {
+                            datePickerControl.setState({
+                                outMinDate: params.candOorgData.disabledStartTime,
+                                outMaxDate: params.candOorgData.disabledEndTime,
+                            });
+                        }
+                        let endlisteners = vm.get("planEndtime").get("listeners");
+                        let endDatePickerControl = endlisteners ? endlisteners[0] : null;
+                        if (endDatePickerControl != undefined) {
+                            endDatePickerControl.setState({
+                                outMinDate:
+                                    params.candOorgData.disabledStartTime ||
+                                    `${params.newTask.start_date} 23:59:59`,
+                                outMaxDate: params.candOorgData.disabledEndTime,
+                            });
+                        }
+                    });
+                }
+                vm.on("tabActiveKeyChange", (param) => {
+                    const { key } = param;
+                    if (key === "rdpm_gantt_modal") {
+                        const data = {
+                            projectId: params.billData.projectId || params.projectId,
+                            taskId: params.billData.id || taskId,
+                            tableState: params.mode,
+                            formGanttStatus: params.formType ? true : false,
+                        };
+                        vm.execute("loadGanttData", data);
+                    } else if (param && param.key == "prjTask20210228") {
+                        //如果是前后置页签，则调用后端接口获取当前任务相关联的前后置任务
+                        let proxy = cb.rest.DynamicProxy.create({
+                            ensure: {
+                                url: "/prjTask/queryLinkTasks",
+                                method: "POST",
+                                options: { domainKey: process.env.__DOMAINKEY__ },
+                            },
+                        });
+                        let reqParams = {
+                            billnum: vm.getParams()["billNo"],
+                            data: {
+                                id: params.billData.id || taskId,
+                            },
+                        };
+                        proxy.ensure(reqParams, function (err, result) {
+                            if (err) {
+                                cb.utils.alert(err.message, "error");
+                                return;
+                            } else {
+                                if (result.data) {
+                                    vm.getGridModel().setDataSource(result.data);
+                                } else {
+                                    cb.utils.alert("查询失败", "error");
+                                }
+                            }
+                        });
+                    } else if (param && param.key == "designDoc") {
+                        // 设计文档
+                        const list = vm.getGridModel("prjTaskDesignDocLinkList").getData();
+                        const length = list.length;
+                        if (params.newTask.docId && length == 0) {
+                            let proxy = cb.rest.DynamicProxy.create({
+                                ensure: {
+                                    url: "/bill/detail",
+                                    method: "get",
+                                    options: { domainKey: "IMP-GDS" },
+                                },
+                            });
+                            let reqParams = {
+                                billnum: "40deda4a-a9ea-460f-93f4-21e3fa85914d",
+                                id: params.newTask.docId,
+                            };
+                            proxy.ensure(reqParams, function (err, result) {
+                                if (err) {
+                                    cb.utils.alert(err.message, "error");
+                                    return;
+                                } else {
+                                    if (result.docRvisionHisList) {
+                                        const arr = [];
+                                        result.docRvisionHisList.forEach((item) => {
+                                            arr.push({
+                                                // 文档名称
+                                                docId_name: item.name,
+                                                // 文档编码
+                                                docCode: item.code,
+                                                // 文档版本
+                                                docRevision: item.revision,
+                                                // 文档版次
+                                                docVersion: item.version,
+                                                projectId: params.projectId,
+                                            });
+                                        });
+                                        vm.getGridModel("prjTaskDesignDocLinkList").insertRows(
+                                            0,
+                                            arr
+                                        );
+                                    } else {
+                                        cb.utils.alert("查询失败", "error");
+                                    }
+                                }
+                            });
+                        }
+                    } else if (param && param.key == "prjTaskGanttCKGroup") {
+                        // 检查项
+                        let hasList =
+                            vm.getGridModel("prjTaskCheckItemList").getData().length > 0
+                                ? true
+                                : false;
+                        if (params.newTask.checklistTplId && !hasList) {
+                            let proxy = cb.rest.DynamicProxy.create({
+                                ensure: {
+                                    url: "/bill/detail",
+                                    method: "get",
+                                    options: { domainKey: process.env.__DOMAINKEY__ },
+                                },
+                            });
+                            let reqParams = {
+                                billnum: "rdpmCkTpl",
+                                id: params.newTask.checklistTplId,
+                            };
+                            proxy.ensure(reqParams, function (err, result) {
+                                if (err) {
+                                    cb.utils.alert(err.message, "error");
+                                    return;
+                                } else {
+                                    if (result.prjCKTplItemList) {
+                                        const resultList = result.prjCKTplItemList.map((item) => {
+                                            item.projectId = params.projectId;
+                                            return item;
+                                        });
+
+                                        vm.getGridModel("prjTaskCheckItemList").insertRows(
+                                            0,
+                                            resultList
+                                        );
+                                    } else {
+                                        cb.utils.alert("查询失败", "error");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    // else if (param && param.key == 'budgetTable') {
+                    //     //查询任务预算
+                    //     console.log("--   进入任务预算查询页面  --  ");
+                    //     let proxy = cb.rest.DynamicProxy.create({
+                    //         ensure: {
+                    //             url: '/prjTask/queryTaskBudget',
+                    //             method: "POST",
+                    //             options: { domainKey: process.env.__DOMAINKEY__ },
+                    //         }
+                    //     });
+                    //     let reqParams = {
+                    //         billnum: vm.getParams()['billNo'],
+                    //         data: {
+                    //             id: params.billData.id || taskId
+                    //         }
+                    //     };
+                    //     proxy.ensure(reqParams, function (err, result) {
+                    //         console.log("-----------------------------------");
+                    //         console.log(result);
+                    //         console.log("-----------------------------------");
+                    //
+                    //
+                    //         if (err) {
+                    //             cb.utils.alert(err.message, "error");
+                    //             return;
+                    //         } else {
+                    //
+                    //             let gridModel = vm.getGridModel("prjTaskBudgetList");
+                    //             if (result != null && Array.isArray(result)) {
+                    //                 gridModel.clear();
+                    //                 let listDoc = result.map((item, index) => {
+                    //                     return {
+                    //                         ...item,
+                    //                         key: index,
+                    //                     }
+                    //                 });
+                    //
+                    //                 gridModel.insertRows(0, listDoc);
+                    //
+                    //             }
+                    //         }
+                    //     })
+                    //
+                    // } else if (param && param.key == 'qualityTable') {
+                    //     //查询任务质量
+                    //     console.log("--   进入任务预算查询页面  --  ");
+                    //
+                    //     let proxy = cb.rest.DynamicProxy.create({
+                    //         ensure: {
+                    //             url: '/prjTask/queryTaskQuality',
+                    //             method: "POST",
+                    //             options: { domainKey: process.env.__DOMAINKEY__ },
+                    //         }
+                    //     });
+                    //
+                    //     let reqParams = {
+                    //         billnum: vm.getParams()['billNo'],
+                    //         data: {
+                    //             id: params.billData.id || taskId
+                    //         }
+                    //     };
+                    //
+                    //     proxy.ensure(reqParams, function (err, result) {
+                    //         console.log("-----------------------------------");
+                    //         console.log(result);
+                    //         console.log("-----------------------------------");
+                    //
+                    //         if (err) {
+                    //             cb.utils.alert(err.message, "error");
+                    //             return;
+                    //         } else {
+                    //
+                    //             let gridModel = vm.getGridModel("prjTaskQualityList");
+                    //             if (result != null && Array.isArray(result)) {
+                    //                 gridModel.clear();
+                    //                 let listDoc = result.map((item, index) => {
+                    //                     return {
+                    //                         ...item,
+                    //                         key: index,
+                    //                     }
+                    //                 });
+                    //
+                    //                 gridModel.insertRows(0, listDoc);
+                    //
+                    //             }
+                    //         }
+                    //     });
+                    // }
+                });
+
+                //    选择类型弹窗
+                addOutputWin(vm);
+                //    设计文档下载,查看
+                deSignDocDownload(
+                    vm,
+                    "btnDownloadDesignDoc",
+                    "prjTaskDesignDocLinkList"
+                );
+                viewDoc(vm, "btnDesignDocView", "prjTaskDesignDocLinkList");
+                //    输出文档下载,查看
+                deSignDocDownload(vm, "btnDownloadDoc", "prjTaskDocLinkList");
+                viewDoc(vm, "btnLinkDocView", "prjTaskDocLinkList");
+            },
+        };
+
+        const viewDoc = (vm, btnCode, gridModelName) => {
+            vm.get(btnCode).on("click", function (params) {
+                let designDocTable = vm.get(gridModelName);
+                let rowData = designDocTable.getRow(params.index);
+                if (!rowData) {
+                    cb.utils.alert(
+                        cb.lang.template("请选择文档后，再执行查看"),
+                        "message"
+                    );
+                    return;
+                }
+                if (!rowData.docCode || !rowData.docRevision) {
+                    cb.utils.alert(
+                        cb.lang.template("没有查到有效文档信息（编码版本）"),
+                        "error"
+                    );
+                    return;
+                }
+                let partParam = {
+                    code: rowData.docCode,
+                    revision: rowData.docRevision,
+                    version: rowData.docVersion,
+                };
+                common.scanDocDetail(vm, partParam, rowData.docId_name);
+            });
+        };
+
+        const deSignDocDownload = (vm, btnCode, gridModelName) => {
+            vm.get(btnCode) &&
+                vm.get(btnCode).on("click", function (params) {
+                    let prjTaskDesignDocLinkList = vm.getGridModel(gridModelName);
+                    let rowData = prjTaskDesignDocLinkList.getRow(params.index);
+                    if (!rowData || !rowData.docId) {
+                        cb.utils.alert("请选择文档后，再执行下载", "message");
+                        return;
+                    }
+                    DocOption.downloadDoc(rowData.docId);
+                });
+        };
+
+        /**
+         * 生命周期跃迁设置
+         *
+         * @param vm
+         * @param common
+         */
+        const jumpSetting = (vm, common) => {
+            // 跃迁事件处理绑定
+            lifeJump.initJump(
+                vm,
+                common,
+                {
+                    bizName: "项目任务",
+                    wfState: 0,
+                    metaFullName: "plm-rdpm.prjTask.prjTask",
+                    metaBillNo: "rdpmPrjGanttModal",
+                    wfKey: "projectTask",
+                    url: "imp/plm/rdpm/life/jump",
+                },
+                function (rows, res) {
+                    if (rows.length != res.sucessCount) {
+                        res.sucessCount = res.count - res.failCount;
+                        res.messages = res.messages || [];
+                        cb.utils.alert(res.messages, "error");
+                    }
+                    vm.biz.do("refresh", vm);
+                }
+            );
+        };
+
+        /**
+         * 初始化跃迁记录
+         */
+        const initJumpLog = (vm, common) => {
+            lifeJump.initJumpHistory(vm, common, "projectTask");
+        };
+
+        const addOutputWin = (vm) => {
+            vm.get("prjTaskDocLinkList").on("beforeInsertRow", function (data) {
+                if (data.row && data.row.outType) {
+                    //数据中已经指定输出类型 比如新增文档， 跳过弹窗
+                } else {
+                    let newDialog = new NewDialog();
+                    newDialog.create().open();
+                }
+            });
+
+            vm.get("btnAddAndLinkDoc") &&
+                vm.get("btnAddAndLinkDoc").on("click", function (params) {
+                    let prjTaskDocLinkList = vm.get("prjTaskDocLinkList");
+                    let newRowData = {
+                        outType: "doc",
+                    };
+                    const { outputType_name, outputType } = vm.getAllData();
+                    if (outputType) {
+                        //如果任务有绑定输出类型， 直接查询输出类型并新增文档
+                        //查询输出类型
+                        OutPutTypeOption.getDetailById(outputType, (outputTypeData) => {
+                            opNewDocAndAddrow(vm, newRowData, outputTypeData);
+                        });
+                    } else {
+                        //任务没有输出类型，弹窗选择输出类型，再新增文档
+                        let outputType_name_refer = vm.get("outputType_name");
+                        if (!outputType_name_refer.hasEvent("afterValueChange")) {
+                            outputType_name_refer.on("afterValueChange", (params) => {
+                                let outputTypeData = params.obj.select;
+                                opNewDocAndAddrow(vm, newRowData, outputTypeData);
+                            });
+                        }
+                        outputType_name_refer.browse(true);
+                    }
+                });
+            vm.get("btnDownloadDoc") &&
+                vm.get("btnDownloadDoc").on("click", function (params) {
+                    let prjTaskDocLinkList = vm.getGridModel("prjTaskDocLinkList");
+                    let rowData = prjTaskDocLinkList.getRow(params.index);
+                    if (!rowData || !rowData.docId) {
+                        cb.utils.alert("请选择文档后，再执行下载", "message");
+                        return;
+                    }
+                    DocOption.downloadDoc(rowData.docId);
+                });
+        };
+
+        /**
+         * 打开新增文档弹窗，并添加到输出类型（关联文档列表）
+         * @param vm vm
+         * @param newRowData 新增行的数据（不用带输出类型，方法里会自动提取到newRowData）
+         * @param outputTypeData 新增文档指定的输出类型（如果关联有分类，文档新增不能修改分类，如果没有，怎新增文档自由选择）
+         */
+        const opNewDocAndAddrow = (vm, newRowData, outputTypeData) => {
+            let controllData = {};
+            if (outputTypeData) {
+                //这里可以考虑直接用配置的refret,先写死
+                newRowData.outputType_name = outputTypeData.name;
+                newRowData.outputType = outputTypeData.id;
+                controllData.inits = {
+                    doc_classfiy_id: outputTypeData.doc_classify,
+                    doc_classfiy_id_name: outputTypeData.doc_classify_name,
+                };
+            }
+            //如果有初始化数据 控制文档分类不允许编辑
+            if (
+                controllData.inits &&
+                controllData.inits.doc_classfiy_id &&
+                controllData.inits.doc_classfiy_id_name
+            ) {
+                controllData.disableds = ["doc_classfiy_id_name"];
+            } else {
+                controllData.inits = undefined; //如果数据缺了 删除初始化数据
+            }
+            //打开文档新建
+            DocOption.openAddService(
+                vm,
+                "项目任务-新增",
+                (data) => {
+                    if (data) {
+                        newRowData.docId = data.id;
+                        newRowData.docId_name = data.name;
+                        newRowData.docCode = data.code;
+                        newRowData.docRevision = data.revision;
+                        newRowData.docVersion = data.version;
+                    }
+                    vm.get("prjTaskDocLinkList").appendRow(newRowData);
+                },
+                controllData
+            );
+        };
+
+        /**
+         * 页面初始化
+         *
+         * @param vm
+         */
+        const saveAllInit = (vm) => {
+            // 設置子页签
+            let prjTaskCheckItemList = vm.getGridModel("prjTaskCheckItemList");
+            let prjTaskBudgetList = vm.getGridModel("prjTaskBudgetList");
+            let prjTaskQualityList = vm.getGridModel("prjTaskQualityList");
+            let prjRiskList = vm.getGridModel("prjRiskList");
+            let prjTaskDocLinkList = vm.getGridModel("prjTaskDocLinkList");
+            let prjTaskTimeList = vm.getGridModel("prjTaskTimeList");
+
+            // 任务子对象添加项目信息
+            prjTaskCheckItemList.on("beforeInsertRow", (data) => {
+                data.row.projectId = vm.getAllData().projectId;
+            });
+
+            prjTaskBudgetList.on("beforeInsertRow", (data) => {
+                data.row.projectId = vm.getAllData().projectId;
+            });
+
+            prjTaskQualityList.on("beforeInsertRow", (data) => {
+                data.row.projectId = vm.getAllData().projectId;
+            });
+
+            prjRiskList.on("beforeInsertRow", (data) => {
+                data.row.projectId = vm.getAllData().projectId;
+            });
+
+            prjTaskDocLinkList.on("beforeInsertRow", (data) => {
+                data.row.projectId = vm.getAllData().projectId;
+            });
+
+            // 工期赋值
+            prjTaskTimeList.on("beforeInsertRow", (data) => {
+                data.row.name = vm.getAllData().name;
+                data.row.projectId = vm.getAllData().projectId;
+                data.row.taskPId = vm.getAllData().parent;
+                data.row.path = vm.getAllData().path;
+            });
+            // 修改工期
+            prjTaskTimeList.on("afterCellValueChange", function (data) {
+                // 被编辑参照数据
+                let row = prjTaskTimeList.getRow(data.rowIndex);
+                if (data.cellName === "startTime" || data.cellName === "endTime") {
+                    if (row.startTime && row.endTime) {
+                        if (row.endTime - row.startTime <= 0) {
+                            cb.utils.alert("工期开始时间需小于结束时间", "warning");
+                            return false;
+                        }
+                        prjTaskTimeList.setCellValue(
+                            data.rowIndex,
+                            "workHour",
+                            (row.endTime - row.startTime) / 2,
+                            true,
+                            true
+                        );
+                    }
+                }
+            });
+        };
+
+        try {
+            module.exports = PLM_RDPM_rdpmPrjGanttModal_VM_Extend;
+        } catch (error) {
+            console.error(error);
+        }
+        return PLM_RDPM_rdpmPrjGanttModal_VM_Extend;
+    }
+);
+// const delet = (store, taskId) => {
+//     window[`gantt${store}`].deleteTask(taskId)
+// }
